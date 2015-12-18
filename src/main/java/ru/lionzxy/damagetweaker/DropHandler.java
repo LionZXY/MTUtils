@@ -12,7 +12,7 @@ public class DropHandler {
 
     @SubscribeEvent
     public void onBlockDestroy(BlockEvent.HarvestDropsEvent event) {
-        if (event.block != null && event.harvester != null) {
+        if (event.block != null && event.harvester != null && DropsObject.dropsObj != null) {
             ItemStack block = new ItemStack(event.block, 1, event.blockMetadata);
             for (DropsObject dropsObject : DropsObject.dropsObj)
                 if (dropsObject.isBlockEqual(block)) {

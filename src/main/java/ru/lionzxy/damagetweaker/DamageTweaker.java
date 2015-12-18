@@ -28,7 +28,7 @@ public class DamageTweaker {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        if (Loader.isModLoaded(NamedBlock.modid))
+        if (Loader.isModLoaded(NamedBlock.modid) || Loader.isModLoaded("UndergroundBiomes"))
             UBC.UBCLoad(event);
 
     }
