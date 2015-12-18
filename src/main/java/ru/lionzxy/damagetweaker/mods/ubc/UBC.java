@@ -37,21 +37,41 @@ public class UBC {
         try {
             JsonArray array = new JsonParser().parse(new JsonReader(new FileReader(jsonFile))).getAsJsonArray();
 
-            StringBuilder translate = new StringBuilder();
             for (JsonElement obj : array) {
                 jsonObject = obj.getAsJsonObject();
                 String part[] = jsonObject.get("nameid").getAsString().split(":");
                 Block oreBlock = GameRegistry.findBlock(part[0], part[1]);
-                if (oreBlock != null) {
-                    if (part.length == 3)
-                        registerOreBlock(oreBlock, Integer.parseInt(part[2]), jsonObject.get("texturepath").getAsString(), jsonObject.get("name").getAsString(), event);
-                    else if (part.length == 2)
-                        registerOreBlock(oreBlock, 0, jsonObject.get("texturepath").getAsString(), jsonObject.get("name").getAsString(), event);
-                    translate.append("ore." + jsonObject.get("name").getAsString() + ".name=" + jsonObject.get("name").getAsString() + "\n");
+                String texturepath;
+                String name;
 
-                } else FMLLog.bigWarning("Block " + jsonObject.get("name").getAsString() + " Not Found");
+                if (oreBlock != null) {
+                    if (part.length == 3){
+
+                        if(jsonObject.get("texturepath") != null)
+                            texturepath = jsonObject.get("texturepath").getAsString();
+                        else texturepath = oreBlock.getIcon(1,Integer.parseInt(part[2])).getIconName();
+
+                        if(jsonObject.get("name") != null)
+                            name = jsonObject.get("name").getAsString();
+                        else name = new ItemStack(oreBlock,1,Integer.parseInt(part[2])).getDisplayName();
+
+                        registerOreBlock(oreBlock, Integer.parseInt(part[2]), texturepath, name, event);
+                    }
+                    else if (part.length == 2){
+
+                        if(jsonObject.get("texturepath") != null)
+                            texturepath = jsonObject.get("texturepath").getAsString();
+                        else texturepath = oreBlock.getIcon(1,0).getIconName();
+
+                        if(jsonObject.get("name") != null)
+                            name = jsonObject.get("name").getAsString();
+                        else name = new ItemStack(oreBlock).getDisplayName();
+
+                        registerOreBlock(oreBlock, 0, texturepath, name, event);
+                    }
+
+                } else FMLLog.bigWarning("Block " + jsonObject.get("nameid").getAsString() + " Not Found");
             }
-            StringTranslate.inject(new ByteArrayInputStream(translate.toString().getBytes(StandardCharsets.UTF_8)));
 
         } catch (Exception e) {
             e.printStackTrace();
