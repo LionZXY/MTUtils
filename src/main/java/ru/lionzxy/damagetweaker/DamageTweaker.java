@@ -39,6 +39,7 @@ public class DamageTweaker {
         MinecraftForge.EVENT_BUS.register(new DropHandler());
         //FMLCommonHandler.instance().bus().register(new DropHandler());
         MineTweakerAPI.registerClass(MTHandlers.class);
+        MineTweakerAPI.registerClass(NBTMT.class);
         if (Loader.isModLoaded(CS.ModIDs.API))
             MineTweakerAPI.registerClass(GregTechHandler.class);
     }
@@ -83,7 +84,7 @@ public class DamageTweaker {
         return stack;
     }
 
-    public static boolean isUBCLoad(){
+    public static boolean isUBCLoad() {
         return Loader.isModLoaded(NamedBlock.modid) || Loader.isModLoaded("UndergroundBiomes");
     }
 }
