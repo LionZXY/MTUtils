@@ -28,13 +28,13 @@ public class DamageTweaker {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        if (Loader.isModLoaded(NamedBlock.modid) || Loader.isModLoaded("UndergroundBiomes"))
+        if (isUBCLoad())
             UBC.UBCLoad(event);
 
     }
 
     @Mod.EventHandler
-    public void PostInit(FMLPostInitializationEvent event) {
+    public void postInit(FMLPostInitializationEvent event) {
 
         MinecraftForge.EVENT_BUS.register(new DropHandler());
         //FMLCommonHandler.instance().bus().register(new DropHandler());
@@ -81,5 +81,9 @@ public class DamageTweaker {
         for (int i = 0; i < stack.length; i++)
             stack[i] = toFluid(iStack[i]);
         return stack;
+    }
+
+    public static boolean isUBCLoad(){
+        return Loader.isModLoaded(NamedBlock.modid) || Loader.isModLoaded("UndergroundBiomes");
     }
 }

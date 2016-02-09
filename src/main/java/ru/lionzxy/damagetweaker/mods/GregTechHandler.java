@@ -13,8 +13,9 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 /**
+ * ${PACKAGE_NAME}
  * Created by LionZXY on 22.11.2015.
- * BetterWorkbench
+ * DamageTweaker
  */
 @ZenClass("mods.MTUtilsGT")
 public class GregTechHandler {

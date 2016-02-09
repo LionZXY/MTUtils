@@ -1,22 +1,23 @@
 package ru.lionzxy.damagetweaker;
 
+import com.sun.xml.internal.bind.v2.model.core.ID;
 import cpw.mods.fml.common.registry.GameRegistry;
 import minetweaker.MineTweakerAPI;
+import minetweaker.api.data.DataBool;
+import minetweaker.api.data.DataList;
+import minetweaker.api.data.DataMap;
+import minetweaker.api.data.IData;
 import minetweaker.api.formatting.IFormattedText;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
-import minetweaker.api.logger.MTLogger;
-import minetweaker.api.oredict.IOreDict;
 import minetweaker.api.oredict.IOreDictEntry;
+import minetweaker.mc1710.data.NBTConverter;
 import minetweaker.mc1710.formatting.FormattedString;
 import minetweaker.mc1710.formatting.IMCFormattedString;
 import minetweaker.mc1710.item.MCItemStack;
 import minetweaker.mc1710.oredict.MCOreDictEntry;
-import net.minecraft.block.Block;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
-import stanhebben.zenscript.annotations.NotNull;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -65,6 +66,65 @@ public class MTHandlers {
         MTUtils.clearDrops() //Recreated HashMap drops
         MTUtils.setBlockDrops(@Nullable IItemStack harvester, IItemStack block, IItemStack drops[], float quantiDrop[], IItemStack falseDrops[])
     */
+    public static IData generateChangeData(IData d) {
+        if (d instanceof DataMap) {
+            IData toExit = new DataMap(new HashMap<String, IData>(), false);
+            for (String s : d.asMap().keySet()) {
+                toExit.memberSet(s, generateChangeData(d.asMap().get(s)));
+            }
+            return toExit;
+        } else if (d instanceof DataList) {
+            IData toExit = new DataList(new ArrayList<IData>(), false);
+            for (IData item : d.asList()) {
+                toExit.add(generateChangeData(item));
+            }
+            return toExit;
+        } else return d;
+    }
+
+    @ZenMethod
+    public static IData writeToNBT(IData data, String path, boolean b) {
+        IData toExit = generateChangeData(data);
+        String[] pathToPoint = spilitToByte(path, (byte) '.');
+        for (int i = 0; i < pathToPoint.length - 1; i++) {
+            toExit = toExit.asMap().get(pathToPoint[i]);
+        }
+        toExit.memberSet(pathToPoint[pathToPoint.length - 1], new DataBool(b));
+        return toExit;
+    }
+
+    @ZenMethod
+    public static IData mergeNBT(IData... datas) {
+        datas[datas.length - 1] = generateChangeData(datas[datas.length - 1]);
+        for (int i = datas.length - 2; i >= 0; i--) {
+            merge(datas[i], datas[datas.length - 1]);
+        }
+        return datas[datas.length - 1];
+    }
+
+    static boolean merge(IData d, IData d2) {
+       /* if (d instanceof DataMap)
+            for (String key : d.asMap().keySet()) {
+                IData data = d.asMap().get(key);
+                IData data1 = d2.asMap().get(key);
+                if (data1 == null || !(data instanceof DataMap
+                        || data1 instanceof DataMap) || !(
+                        data instanceof DataList
+                                || data1 instanceof DataList))
+                    d2.memberSet(key, data);
+                else merge(data, data1);
+            }
+        else if (d instanceof DataList)
+            for (IData data :) {
+            }*/
+        return true;
+    }
+
+    @ZenMethod
+    public static IFormattedText newLine() {
+        return getIFormatedTextFromString("\r\n");
+    }
+
     @ZenMethod
     public static void setItemMaxDamage(IItemStack input, int damage) {
         DamageTweaker.toStack(input).getItem().setMaxDamage(damage);
@@ -265,5 +325,17 @@ public class MTHandlers {
             if (from.equalsIgnoreCase(i + ""))
                 return true;
         return false;
+    }
+
+    public static String[] spilitToByte(String str, byte b) {
+        List<String> toExit = new ArrayList<String>();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < str.length(); i++)
+            if ((byte) str.charAt(i) == b) {
+                toExit.add(sb.toString());
+                sb = new StringBuilder();
+            } else sb.append(str.charAt(i));
+        toExit.add(sb.toString());
+        return toExit.toArray(new String[toExit.size()]);
     }
 }
