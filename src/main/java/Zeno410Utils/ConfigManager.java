@@ -1,15 +1,11 @@
 
 package Zeno410Utils;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.PatternSyntaxException;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.config.Configuration;
+
+import java.io.File;
+import java.util.logging.Logger;
 
 public class ConfigManager<Type extends Settings> {
     static Logger logger = new Zeno410Logger("ConfigManager").logger();

@@ -17,6 +17,8 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import ru.lionzxy.damagetweaker.mods.GregTechHandler;
 import ru.lionzxy.damagetweaker.mods.ubc.UBC;
+import ru.lionzxy.damagetweaker.nbt.Read;
+import ru.lionzxy.damagetweaker.nbt.Write;
 
 /**
  * Created by nikit on 10.09.2015.
@@ -39,6 +41,8 @@ public class DamageTweaker {
         MinecraftForge.EVENT_BUS.register(new DropHandler());
         //FMLCommonHandler.instance().bus().register(new DropHandler());
         MineTweakerAPI.registerClass(MTHandlers.class);
+        MineTweakerAPI.registerClass(Read.class);
+        MineTweakerAPI.registerClass(Write.class);
         if (Loader.isModLoaded(CS.ModIDs.API))
             MineTweakerAPI.registerClass(GregTechHandler.class);
     }

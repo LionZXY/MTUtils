@@ -1,11 +1,10 @@
 package ru.lionzxy.damagetweaker;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 
-import java.util.*;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Created by nikit_000 on 04.10.2015.

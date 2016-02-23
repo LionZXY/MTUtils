@@ -1,7 +1,6 @@
 package ru.lionzxy.damagetweaker.mods.ubc;
 
 import Zeno410Utils.MinecraftName;
-import net.minecraft.util.StatCollector;
 
 /**
  * Created by LionZXY on 22.10.2015.

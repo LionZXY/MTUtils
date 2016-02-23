@@ -5,7 +5,7 @@ package exterminatorJeff.undergroundBiomes.api;
  * @author Zeno410
  */
 
-import Zeno410Utils.*;
+import Zeno410Utils.BlockState;
 import net.minecraft.block.Block;
 
 public class BlockCodes extends BlockState {

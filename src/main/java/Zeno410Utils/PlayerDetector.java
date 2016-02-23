@@ -4,10 +4,11 @@ package Zeno410Utils;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
-import java.util.HashMap;
-import java.util.HashSet;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
+
+import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  *

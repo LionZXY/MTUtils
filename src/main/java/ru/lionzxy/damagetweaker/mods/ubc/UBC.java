@@ -14,11 +14,11 @@ import exterminatorJeff.undergroundBiomes.api.UBAPIHook;
 import exterminatorJeff.undergroundBiomes.api.UBOreTexturizer;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StringTranslate;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.lang.reflect.Method;
-import java.nio.charset.StandardCharsets;
 
 /**
  * Created by nikit_000 on 06.10.2015.
