@@ -81,7 +81,7 @@ public class Read {
     @ZenMethod
     public static IData getUnReadDataFromString(IData nbt, String path) {
         IData toExit = nbt;
-        String[] pathToPoint = Write.spilitToByte(path, (byte) '.');
+        String[] pathToPoint = Write.splitToByte(path, (byte) '.');
         for (int i = 0; i < pathToPoint.length; i++) {
             toExit = toExit.asMap().get(pathToPoint[i]);
         }
