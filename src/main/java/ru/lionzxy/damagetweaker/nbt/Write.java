@@ -20,7 +20,7 @@ public class Write {
     @ZenMethod
     public static IData writeToNBT(IData data, String path, boolean b) {
         IData toExit = generateChangeData(data);
-        String[] pathToPoint = spilitToByte(path, (byte) '.');
+        String[] pathToPoint = splitToByte(path, (byte) '.');
         for (int i = 0; i < pathToPoint.length - 1; i++) {
             toExit = toExit.asMap().get(pathToPoint[i]);
         }
@@ -31,7 +31,7 @@ public class Write {
     @ZenMethod
     public static IData writeToNBT(IData data, String path, IData d) {
         IData toExit = generateChangeData(data);
-        String[] pathToPoint = spilitToByte(path, (byte) '.');
+        String[] pathToPoint = splitToByte(path, (byte) '.');
         for (int i = 0; i < pathToPoint.length - 1; i++) {
             toExit = toExit.asMap().get(pathToPoint[i]);
         }
@@ -42,7 +42,7 @@ public class Write {
     @ZenMethod
     public static IData writeToNBT(IData data, String path, byte b) {
         IData toExit = generateChangeData(data);
-        String[] pathToPoint = spilitToByte(path, (byte) '.');
+        String[] pathToPoint = splitToByte(path, (byte) '.');
         for (int i = 0; i < pathToPoint.length - 1; i++) {
             toExit = toExit.asMap().get(pathToPoint[i]);
         }
@@ -53,7 +53,7 @@ public class Write {
     @ZenMethod
     public static IData writeToNBT(IData data, String path, byte[] b) {
         IData toExit = generateChangeData(data);
-        String[] pathToPoint = spilitToByte(path, (byte) '.');
+        String[] pathToPoint = splitToByte(path, (byte) '.');
         for (int i = 0; i < pathToPoint.length - 1; i++) {
             toExit = toExit.asMap().get(pathToPoint[i]);
         }
@@ -64,7 +64,7 @@ public class Write {
     @ZenMethod
     public static IData writeToNBT(IData data, String path, double b) {
         IData toExit = generateChangeData(data);
-        String[] pathToPoint = spilitToByte(path, (byte) '.');
+        String[] pathToPoint = splitToByte(path, (byte) '.');
         for (int i = 0; i < pathToPoint.length - 1; i++) {
             toExit = toExit.asMap().get(pathToPoint[i]);
         }
@@ -75,7 +75,7 @@ public class Write {
     @ZenMethod
     public static IData writeToNBT(IData data, String path, float b) {
         IData toExit = generateChangeData(data);
-        String[] pathToPoint = spilitToByte(path, (byte) '.');
+        String[] pathToPoint = splitToByte(path, (byte) '.');
         for (int i = 0; i < pathToPoint.length - 1; i++) {
             toExit = toExit.asMap().get(pathToPoint[i]);
         }
@@ -86,7 +86,7 @@ public class Write {
     @ZenMethod
     public static IData writeToNBT(IData data, String path, int b) {
         IData toExit = generateChangeData(data);
-        String[] pathToPoint = spilitToByte(path, (byte) '.');
+        String[] pathToPoint = splitToByte(path, (byte) '.');
         for (int i = 0; i < pathToPoint.length - 1; i++) {
             toExit = toExit.asMap().get(pathToPoint[i]);
         }
@@ -97,7 +97,7 @@ public class Write {
     @ZenMethod
     public static IData writeToNBT(IData data, String path, int[] b) {
         IData toExit = generateChangeData(data);
-        String[] pathToPoint = spilitToByte(path, (byte) '.');
+        String[] pathToPoint = splitToByte(path, (byte) '.');
         for (int i = 0; i < pathToPoint.length - 1; i++) {
             toExit = toExit.asMap().get(pathToPoint[i]);
         }
@@ -108,7 +108,7 @@ public class Write {
     @ZenMethod
     public static IData writeToNBT(IData data, String path, long b) {
         IData toExit = generateChangeData(data);
-        String[] pathToPoint = spilitToByte(path, (byte) '.');
+        String[] pathToPoint = splitToByte(path, (byte) '.');
         for (int i = 0; i < pathToPoint.length - 1; i++) {
             toExit = toExit.asMap().get(pathToPoint[i]);
         }
@@ -119,7 +119,7 @@ public class Write {
     @ZenMethod
     public static IData writeToNBT(IData data, String path, short b) {
         IData toExit = generateChangeData(data);
-        String[] pathToPoint = spilitToByte(path, (byte) '.');
+        String[] pathToPoint = splitToByte(path, (byte) '.');
         for (int i = 0; i < pathToPoint.length - 1; i++) {
             toExit = toExit.asMap().get(pathToPoint[i]);
         }
@@ -130,7 +130,7 @@ public class Write {
     @ZenMethod
     public static IData writeToNBT(IData data, String path, String s) {
         IData toExit = generateChangeData(data);
-        String[] pathToPoint = spilitToByte(path, (byte) '.');
+        String[] pathToPoint = splitToByte(path, (byte) '.');
         for (int i = 0; i < pathToPoint.length - 1; i++) {
             toExit = toExit.asMap().get(pathToPoint[i]);
         }
@@ -138,7 +138,7 @@ public class Write {
         return toExit;
     }
 
-    public static String[] spilitToByte(String str, byte b) {
+    public static String[] splitToByte(String str, byte b) {
         List<String> toExit = new ArrayList<String>();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < str.length(); i++)
