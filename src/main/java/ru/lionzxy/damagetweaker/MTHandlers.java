@@ -76,7 +76,7 @@ public class MTHandlers {
 
 
     public static String[] splitString(String original, char split) {
-        return Write.spilitToByte(original, (byte) split);
+        return Write.splitToByte(original, (byte) split);
     }
 
     @ZenMethod
