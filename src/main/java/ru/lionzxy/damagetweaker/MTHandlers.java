@@ -7,11 +7,13 @@ import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.oredict.IOreDictEntry;
 import minetweaker.api.tooltip.IngredientTooltips;
+import minetweaker.mc1710.formatting.FormattedMarkupString;
 import minetweaker.mc1710.formatting.FormattedString;
 import minetweaker.mc1710.formatting.IMCFormattedString;
 import minetweaker.mc1710.item.MCItemStack;
 import minetweaker.mc1710.oredict.MCOreDictEntry;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.oredict.OreDictionary;
 import ru.lionzxy.damagetweaker.nbt.Write;
 import stanhebben.zenscript.annotations.ZenClass;
@@ -64,6 +66,7 @@ public class MTHandlers {
 
     @ZenMethod
     public static void addMultilineShiftTooltip(IItemStack stack, IFormattedText strs, String s) {
+        //((FormattedMarkupString) strs)
         for (String str : splitString(MTHandlers.getStringFromFormattedText(strs), s))
             IngredientTooltips.addShiftTooltip(stack, MTHandlers.getIFormatedTextFromString(str));
     }
@@ -185,7 +188,7 @@ public class MTHandlers {
 
     @ZenMethod
     public static String getStringFromFormattedText(IFormattedText text) {
-        return ((FormattedString)text).getTooltipString();
+        return ((FormattedString) text).getTooltipString();
     }
 
     @ZenMethod
@@ -278,6 +281,15 @@ public class MTHandlers {
         else MineTweakerAPI.logError("Use MTUtils.clearDrop(); in start your script!!!");
     }
 
+    @ZenMethod
+    public static boolean eqItemStack(IItemStack... stacks) {
+        ItemStack[] stacks1 = DamageTweaker.toStacks(stacks);
+        for (int i = 1; i < stacks1.length; i++)
+            if (!stacks1[i].isItemEqual(stacks1[i - 1]))
+                return false;
+        return true;
+    }
+
 
     public static boolean contains(ItemStack itemStack, IOreDictEntry... oreDictEntry) {
         for (IOreDictEntry oreDictEntry1 : oreDictEntry)
@@ -287,9 +299,6 @@ public class MTHandlers {
     }
 
     public static boolean isStringInt(String from) {
-        for (int i = 0; i < 10; i++)
-            if (from.equalsIgnoreCase(i + ""))
-                return true;
-        return false;
+        return (byte) '0' - 1 < from.charAt(0) && from.charAt(0) > (byte) '9' + 1;
     }
 }
