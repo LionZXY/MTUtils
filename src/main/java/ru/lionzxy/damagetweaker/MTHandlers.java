@@ -290,6 +290,14 @@ public class MTHandlers {
         return true;
     }
 
+    @ZenMethod
+    public static boolean eqString(String... strs) {
+        for (int i = 1; i < strs.length; i++)
+            if (!strs[i].equals(strs[i - 1]))
+                return false;
+        return true;
+    }
+
 
     public static boolean contains(ItemStack itemStack, IOreDictEntry... oreDictEntry) {
         for (IOreDictEntry oreDictEntry1 : oreDictEntry)
