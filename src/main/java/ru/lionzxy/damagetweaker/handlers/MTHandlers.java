@@ -1,6 +1,7 @@
 package ru.lionzxy.damagetweaker.handlers;
 
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.formatting.IFormattedText;
@@ -13,6 +14,7 @@ import minetweaker.mc1710.formatting.IMCFormattedString;
 import minetweaker.mc1710.item.MCItemStack;
 import minetweaker.mc1710.oredict.MCOreDictEntry;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.oredict.OreDictionary;
 import ru.lionzxy.damagetweaker.MTUtilsMod;
 import ru.lionzxy.damagetweaker.models.DropsObject;
@@ -23,6 +25,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Delayed;
 
 /**
  * Created by nikit on 10.09.2015.
@@ -30,6 +33,21 @@ import java.util.Random;
 
 @ZenClass("mods.MTUtils.Utils")
 public class MTHandlers {
+
+    @ZenMethod
+    public static void executeCommand(IFormattedText cmd) {
+        executeCommand(getStringFromFormattedText(cmd));
+    }
+
+    @ZenMethod
+    public static void executeCommand(final String cmd) {
+        TicksHandler.addTasksAfterSererLoaded(new Runnable() {
+            @Override
+            public void run() {
+                MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(), cmd);
+            }
+        });
+    }
 
     @ZenMethod
     public static void addMultilineShiftTooltip(IItemStack stack, IFormattedText strs, String s) {

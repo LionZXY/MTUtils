@@ -1,8 +1,10 @@
 package ru.lionzxy.damagetweaker.handlers;
 
 import minetweaker.api.data.IData;
+import minetweaker.api.formatting.IFormattedText;
 import minetweaker.mc1710.data.NBTConverter;
 import net.minecraft.nbt.*;
+import net.minecraft.server.MinecraftServer;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 

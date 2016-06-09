@@ -26,6 +26,5 @@ public class HandlerHelper {
         if (FMLCommonHandler.instance().getEffectiveSide().isClient()
                 && MTUtilsMod.configuration.get("general", "ThankMessage", true).getBoolean())
             FMLCommonHandler.instance().bus().register(new FirstLoginHandler());
-
     }
 }

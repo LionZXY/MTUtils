@@ -4,6 +4,7 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import exterminatorJeff.undergroundBiomes.api.NamedBlock;
 import gregapi.data.CS;
 import minetweaker.MineTweakerAPI;
@@ -16,6 +17,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import ru.lionzxy.damagetweaker.handlers.HandlerHelper;
+import ru.lionzxy.damagetweaker.handlers.TicksHandler;
 import ru.lionzxy.damagetweaker.mods.ubc.UBC;
 
 import java.io.File;
@@ -32,7 +34,7 @@ public class MTUtilsMod {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         configuration = new Configuration(
-                new File(Loader.instance().getConfigDir() + "/MTUtils","general.cfg"),
+                new File(Loader.instance().getConfigDir() + "/MTUtils", "general.cfg"),
                 "1.5");
         configuration.load();
         if (isUBCLoad())
@@ -43,6 +45,11 @@ public class MTUtilsMod {
     public void postInit(FMLPostInitializationEvent event) {
         HandlerHelper.registerAllHandler();
         configuration.save();
+    }
+
+    @Mod.EventHandler
+    public void onServerLoaded(FMLServerStartedEvent event) {
+        TicksHandler.onServerLoaded(event);
     }
 
 
