@@ -1,6 +1,8 @@
 package ru.lionzxy.damagetweaker.nbt;
 
 import minetweaker.api.data.*;
+import minetweaker.mc1710.data.NBTConverter;
+import net.minecraft.nbt.*;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -18,124 +20,89 @@ public class Write {
 
 
     @ZenMethod
-    public static IData writeToNBT(IData data, String path, boolean b) {
-        IData toExit = generateChangeData(data);
-        String[] pathToPoint = splitToByte(path, (byte) '.');
-        for (int i = 0; i < pathToPoint.length - 1; i++) {
-            toExit = toExit.asMap().get(pathToPoint[i]);
-        }
-        toExit.memberSet(pathToPoint[pathToPoint.length - 1], new DataBool(b));
-        return toExit;
+    public static IData writeToNBT(IData data, String path, boolean value) {
+        NBTTagCompound tagCompound = (NBTTagCompound) NBTConverter.from(data);
+        getTagByPath(tagCompound, path).setTag(path, new NBTConverter().fromBool(value));
+        return NBTConverter.from(tagCompound, false);
     }
 
     @ZenMethod
-    public static IData writeToNBT(IData data, String path, IData d) {
-        IData toExit = generateChangeData(data);
-        String[] pathToPoint = splitToByte(path, (byte) '.');
-        for (int i = 0; i < pathToPoint.length - 1; i++) {
-            toExit = toExit.asMap().get(pathToPoint[i]);
-        }
-        toExit.memberSet(pathToPoint[pathToPoint.length - 1], d);
-        return toExit;
+    public static IData writeToNBT(IData data, String path, IData value) {
+        NBTTagCompound tagCompound = (NBTTagCompound) NBTConverter.from(data);
+        getTagByPath(tagCompound, path).setTag(path, NBTConverter.from(value));
+        return NBTConverter.from(tagCompound, false);
     }
 
     @ZenMethod
-    public static IData writeToNBT(IData data, String path, byte b) {
-        IData toExit = generateChangeData(data);
-        String[] pathToPoint = splitToByte(path, (byte) '.');
-        for (int i = 0; i < pathToPoint.length - 1; i++) {
-            toExit = toExit.asMap().get(pathToPoint[i]);
-        }
-        toExit.memberSet(pathToPoint[pathToPoint.length - 1], new DataByte(b));
-        return toExit;
+    public static IData writeToNBT(IData data, String path, byte value) {
+        NBTTagCompound tagCompound = (NBTTagCompound) NBTConverter.from(data);
+        getTagByPath(tagCompound, path).setTag(path, new NBTTagByte(value));
+        return NBTConverter.from(tagCompound, false);
     }
 
     @ZenMethod
-    public static IData writeToNBT(IData data, String path, byte[] b) {
-        IData toExit = generateChangeData(data);
-        String[] pathToPoint = splitToByte(path, (byte) '.');
-        for (int i = 0; i < pathToPoint.length - 1; i++) {
-            toExit = toExit.asMap().get(pathToPoint[i]);
-        }
-        toExit.memberSet(pathToPoint[pathToPoint.length - 1], new DataByteArray(b, false));
-        return toExit;
+    public static IData writeToNBT(IData data, String path, byte[] value) {
+        NBTTagCompound tagCompound = (NBTTagCompound) NBTConverter.from(data);
+        getTagByPath(tagCompound, path).setTag(path, new NBTTagByteArray(value));
+        return NBTConverter.from(tagCompound, false);
     }
 
     @ZenMethod
-    public static IData writeToNBT(IData data, String path, double b) {
-        IData toExit = generateChangeData(data);
-        String[] pathToPoint = splitToByte(path, (byte) '.');
-        for (int i = 0; i < pathToPoint.length - 1; i++) {
-            toExit = toExit.asMap().get(pathToPoint[i]);
-        }
-        toExit.memberSet(pathToPoint[pathToPoint.length - 1], new DataDouble(b));
-        return toExit;
+    public static IData writeToNBT(IData data, String path, double value) {
+        NBTTagCompound tagCompound = (NBTTagCompound) NBTConverter.from(data);
+        getTagByPath(tagCompound, path).setTag(path, new NBTTagDouble(value));
+        return NBTConverter.from(tagCompound, false);
     }
 
     @ZenMethod
-    public static IData writeToNBT(IData data, String path, float b) {
-        IData toExit = generateChangeData(data);
-        String[] pathToPoint = splitToByte(path, (byte) '.');
-        for (int i = 0; i < pathToPoint.length - 1; i++) {
-            toExit = toExit.asMap().get(pathToPoint[i]);
-        }
-        toExit.memberSet(pathToPoint[pathToPoint.length - 1], new DataFloat(b));
-        return toExit;
+    public static IData writeToNBT(IData data, String path, float value) {
+        NBTTagCompound tagCompound = (NBTTagCompound) NBTConverter.from(data);
+        getTagByPath(tagCompound, path).setTag(path, new NBTTagFloat(value));
+        return NBTConverter.from(tagCompound, false);
     }
 
     @ZenMethod
-    public static IData writeToNBT(IData data, String path, int b) {
-        IData toExit = generateChangeData(data);
-        String[] pathToPoint = splitToByte(path, (byte) '.');
-        for (int i = 0; i < pathToPoint.length - 1; i++) {
-            toExit = toExit.asMap().get(pathToPoint[i]);
-        }
-        toExit.memberSet(pathToPoint[pathToPoint.length - 1], new DataInt(b));
-        return toExit;
+    public static IData writeToNBT(IData data, String path, int value) {
+        NBTTagCompound tagCompound = (NBTTagCompound) NBTConverter.from(data);
+        getTagByPath(tagCompound, path).setTag(path, new NBTTagInt(value));
+        return NBTConverter.from(tagCompound, false);
     }
 
     @ZenMethod
-    public static IData writeToNBT(IData data, String path, int[] b) {
-        IData toExit = generateChangeData(data);
-        String[] pathToPoint = splitToByte(path, (byte) '.');
-        for (int i = 0; i < pathToPoint.length - 1; i++) {
-            toExit = toExit.asMap().get(pathToPoint[i]);
-        }
-        toExit.memberSet(pathToPoint[pathToPoint.length - 1], new DataIntArray(b, false));
-        return toExit;
+    public static IData writeToNBT(IData data, String path, int[] value) {
+        NBTTagCompound tagCompound = (NBTTagCompound) NBTConverter.from(data);
+        getTagByPath(tagCompound, path).setTag(path, new NBTTagIntArray(value));
+        return NBTConverter.from(tagCompound, false);
     }
 
     @ZenMethod
-    public static IData writeToNBT(IData data, String path, long b) {
-        IData toExit = generateChangeData(data);
-        String[] pathToPoint = splitToByte(path, (byte) '.');
-        for (int i = 0; i < pathToPoint.length - 1; i++) {
-            toExit = toExit.asMap().get(pathToPoint[i]);
-        }
-        toExit.memberSet(pathToPoint[pathToPoint.length - 1], new DataLong(b));
-        return toExit;
+    public static IData writeToNBT(IData data, String path, long value) {
+        NBTTagCompound tagCompound = (NBTTagCompound) NBTConverter.from(data);
+        getTagByPath(tagCompound, path).setTag(path, new NBTTagLong(value));
+        return NBTConverter.from(tagCompound, false);
     }
 
     @ZenMethod
-    public static IData writeToNBT(IData data, String path, short b) {
-        IData toExit = generateChangeData(data);
-        String[] pathToPoint = splitToByte(path, (byte) '.');
-        for (int i = 0; i < pathToPoint.length - 1; i++) {
-            toExit = toExit.asMap().get(pathToPoint[i]);
-        }
-        toExit.memberSet(pathToPoint[pathToPoint.length - 1], new DataShort(b));
-        return toExit;
+    public static IData writeToNBT(IData data, String path, short value) {
+        NBTTagCompound tagCompound = (NBTTagCompound) NBTConverter.from(data);
+        getTagByPath(tagCompound, path).setTag(path, new NBTTagShort(value));
+        return NBTConverter.from(tagCompound, false);
     }
 
     @ZenMethod
-    public static IData writeToNBT(IData data, String path, String s) {
-        IData toExit = generateChangeData(data);
-        String[] pathToPoint = splitToByte(path, (byte) '.');
-        for (int i = 0; i < pathToPoint.length - 1; i++) {
-            toExit = toExit.asMap().get(pathToPoint[i]);
-        }
-        toExit.memberSet(pathToPoint[pathToPoint.length - 1], new DataString(s));
-        return toExit;
+    public static IData writeToNBT(IData data, String path, String value) {
+        NBTTagCompound tagCompound = (NBTTagCompound) NBTConverter.from(data);
+        getTagByPath(tagCompound, path).setTag(path, new NBTTagString(value));
+        return NBTConverter.from(tagCompound, false);
+    }
+
+    public static NBTTagCompound getTagByPath(NBTTagCompound tagCompound, String path) {
+        if (path.contains(".")) {
+            String key = path.substring(0, path.indexOf("."));
+            if (tagCompound.getCompoundTag(key) == null)
+                tagCompound.setTag(key, new NBTTagCompound());
+            return getTagByPath(tagCompound.getCompoundTag(key), path.substring(path.indexOf(".") + 1));
+        } else return tagCompound;
     }
 
     public static String[] splitToByte(String str, byte b) {
@@ -149,50 +116,5 @@ public class Write {
         toExit.add(sb.toString());
         return toExit.toArray(new String[toExit.size()]);
     }
-
-
-    public static IData generateChangeData(IData d) {
-        if (d instanceof DataMap) {
-            IData toExit = new DataMap(new HashMap<String, IData>(), false);
-            for (String s : d.asMap().keySet()) {
-                toExit.memberSet(s, generateChangeData(d.asMap().get(s)));
-            }
-            return toExit;
-        } else if (d instanceof DataList) {
-            IData toExit = new DataList(new ArrayList<IData>(), false);
-            for (IData item : d.asList()) {
-                toExit.add(generateChangeData(item));
-            }
-            return toExit;
-        } else return d;
-    }
-
-    //Unwork
-    public static IData mergeNBT(IData... datas) {
-        datas[datas.length - 1] = generateChangeData(datas[datas.length - 1]);
-        for (int i = datas.length - 2; i >= 0; i--) {
-            merge(datas[i], datas[datas.length - 1]);
-        }
-        return datas[datas.length - 1];
-    }
-
-    static boolean merge(IData d, IData d2) {
-       /* if (d instanceof DataMap)
-            for (String key : d.asMap().keySet()) {
-                IData data = d.asMap().get(key);
-                IData data1 = d2.asMap().get(key);
-                if (data1 == null || !(data instanceof DataMap
-                        || data1 instanceof DataMap) || !(
-                        data instanceof DataList
-                                || data1 instanceof DataList))
-                    d2.memberSet(key, data);
-                else merge(data, data1);
-            }
-        else if (d instanceof DataList)
-            for (IData data :) {
-            }*/
-        return true;
-    }
-
 
 }

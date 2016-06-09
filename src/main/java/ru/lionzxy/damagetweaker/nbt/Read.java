@@ -1,6 +1,8 @@
 package ru.lionzxy.damagetweaker.nbt;
 
 import minetweaker.api.data.IData;
+import minetweaker.mc1710.data.NBTConverter;
+import net.minecraft.nbt.NBTTagCompound;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -17,76 +19,70 @@ public class Read {
 
     @ZenMethod
     public static Map readMapFromNBT(IData nbt, String path) {
-        return getUnReadDataFromString(nbt, path).asMap();
+        return getTagByPath(nbt, path).asMap();
     }
 
     @ZenMethod
     public static short readShortFromNBT(IData nbt, String path) {
-        return getUnReadDataFromString(nbt, path).asShort();
+        return getTagByPath(nbt, path).asShort();
     }
 
     @ZenMethod
     public static String readStringFromNBT(IData nbt, String path) {
-        return getUnReadDataFromString(nbt, path).asString();
+        return getTagByPath(nbt, path).asString();
     }
 
     @ZenMethod
     public static int readIntFromNBT(IData nbt, String path) {
-        return getUnReadDataFromString(nbt, path).asInt();
+        return getTagByPath(nbt, path).asInt();
     }
 
 
     @ZenMethod
     public static int[] readIntArrayFromNBT(IData nbt, String path) {
-        return getUnReadDataFromString(nbt, path).asIntArray();
+        return getTagByPath(nbt, path).asIntArray();
     }
 
 
     @ZenMethod
     public static List readListFromNBT(IData nbt, String path) {
-        return getUnReadDataFromString(nbt, path).asList();
+        return getTagByPath(nbt, path).asList();
     }
 
 
     @ZenMethod
     public static long readLongFromNBT(IData nbt, String path) {
-        return getUnReadDataFromString(nbt, path).asLong();
+        return getTagByPath(nbt, path).asLong();
     }
 
     @ZenMethod
     public static byte readByteFromNBT(IData nbt, String path) {
-        return getUnReadDataFromString(nbt, path).asByte();
+        return getTagByPath(nbt, path).asByte();
     }
 
     @ZenMethod
     public static byte[] readByteArrayFromNBT(IData nbt, String path) {
-        return getUnReadDataFromString(nbt, path).asByteArray();
+        return getTagByPath(nbt, path).asByteArray();
     }
 
     @ZenMethod
     public static double readDoubleFromNBT(IData nbt, String path) {
-        return getUnReadDataFromString(nbt, path).asDouble();
+        return getTagByPath(nbt, path).asDouble();
     }
 
     @ZenMethod
     public static float readFloatFromNBT(IData nbt, String path) {
-        return getUnReadDataFromString(nbt, path).asFloat();
+        return getTagByPath(nbt, path).asFloat();
     }
 
     @ZenMethod
     public static boolean readBoolFromNBT(IData nbt, String path) {
-        return getUnReadDataFromString(nbt, path).asBool();
+        return getTagByPath(nbt, path).asBool();
     }
 
-    @ZenMethod
-    public static IData getUnReadDataFromString(IData nbt, String path) {
-        IData toExit = nbt;
-        String[] pathToPoint = Write.splitToByte(path, (byte) '.');
-        for (int i = 0; i < pathToPoint.length; i++) {
-            toExit = toExit.asMap().get(pathToPoint[i]);
-        }
-
-        return toExit;
+    public static IData getTagByPath(IData data, String path) {
+        NBTTagCompound tagCompound = (NBTTagCompound) NBTConverter.from(data);
+        return NBTConverter.from(Write.getTagByPath(tagCompound, path).getTag(path.substring(path.lastIndexOf(".") + 1)), false);
     }
 
 }

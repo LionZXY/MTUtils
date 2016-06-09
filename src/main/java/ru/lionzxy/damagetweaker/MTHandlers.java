@@ -1,20 +1,22 @@
 package ru.lionzxy.damagetweaker;
 
+
 import cpw.mods.fml.common.registry.GameRegistry;
 import minetweaker.MineTweakerAPI;
+import minetweaker.api.data.IData;
 import minetweaker.api.formatting.IFormattedText;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.oredict.IOreDictEntry;
 import minetweaker.api.tooltip.IngredientTooltips;
-import minetweaker.mc1710.formatting.FormattedMarkupString;
 import minetweaker.mc1710.formatting.FormattedString;
 import minetweaker.mc1710.formatting.IMCFormattedString;
 import minetweaker.mc1710.item.MCItemStack;
 import minetweaker.mc1710.oredict.MCOreDictEntry;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.oredict.OreDictionary;
+import ru.lionzxy.damagetweaker.nbt.CustomGlobalData;
+import ru.lionzxy.damagetweaker.nbt.CustomWorldData;
 import ru.lionzxy.damagetweaker.nbt.Write;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -22,6 +24,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by nikit on 10.09.2015.
@@ -29,6 +32,43 @@ import java.util.List;
 
 @ZenClass("mods.MTUtils")
 public class MTHandlers {
+    @ZenMethod
+    public static IData getWorldNBT() {
+        try {
+            return CustomWorldData.getWorld().getData();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @ZenMethod
+    public static void setWorldNBT(IData data) {
+        try {
+            CustomWorldData.getWorld().setData(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @ZenMethod
+    public static IData getGlobalNBT() {
+        try {
+            return CustomGlobalData.getInstance().getData();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @ZenMethod
+    public static void setGlobalNBT(IData data) {
+        try {
+            CustomGlobalData.getInstance().getData();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     /*import mods.MTUtils
     Items:
         MTUtils.setItemMaxDamage(itemstack, damage);
@@ -102,6 +142,11 @@ public class MTHandlers {
     @ZenMethod
     public static int getItemMaxDamage(IItemStack input) {
         return DamageTweaker.toStack(input).getItem().getMaxDamage();
+    }
+
+    @ZenMethod
+    public static int getRandomInt(int range) {
+        return new Random().nextInt(range);
     }
 
     @ZenMethod
