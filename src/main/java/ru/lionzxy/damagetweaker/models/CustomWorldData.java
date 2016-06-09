@@ -1,6 +1,9 @@
 package ru.lionzxy.damagetweaker.models;
 
+import com.google.common.io.Files;
+import cpw.mods.fml.common.Loader;
 import minetweaker.api.data.IData;
+import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.storage.ISaveFormat;
 import net.minecraft.world.storage.SaveHandler;
@@ -29,6 +32,15 @@ public class CustomWorldData extends CustomData {
 
     @Override
     File getFile() {
+        try {
+            File worldTemplare = new File(Loader.instance().getConfigDir() + "/MTUtils/data/", "newworld.nbt");
+            File worldNow = new File(getWorldFolder(), "MTUtilsData.nbt");
+            if (!worldNow.exists())
+                if (worldTemplare.exists())
+                    Files.copy(worldTemplare, worldNow);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return new File(getWorldFolder(), "MTUtilsData.nbt");
     }
 

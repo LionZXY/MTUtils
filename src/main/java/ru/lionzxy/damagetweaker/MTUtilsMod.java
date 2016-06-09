@@ -1,9 +1,11 @@
 package ru.lionzxy.damagetweaker;
 
+import com.google.common.io.Files;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import exterminatorJeff.undergroundBiomes.api.NamedBlock;
 import gregapi.data.CS;
@@ -11,6 +13,7 @@ import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.liquid.ILiquidStack;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
@@ -18,6 +21,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import ru.lionzxy.damagetweaker.handlers.HandlerHelper;
 import ru.lionzxy.damagetweaker.handlers.TicksHandler;
+import ru.lionzxy.damagetweaker.models.CustomGlobalData;
 import ru.lionzxy.damagetweaker.mods.ubc.UBC;
 
 import java.io.File;
@@ -37,6 +41,18 @@ public class MTUtilsMod {
                 new File(Loader.instance().getConfigDir() + "/MTUtils", "general.cfg"),
                 "1.5");
         configuration.load();
+
+        try {
+            File globalTemplare = new File(Loader.instance().getConfigDir() + "/MTUtils/data/", "newglobal.nbt");
+            File globalNow = new File(Minecraft.getMinecraft().mcDataDir, "MTUtilsData.nbt");
+            if (!globalNow.exists())
+                if (globalTemplare.exists())
+                    Files.copy(globalTemplare, globalNow);
+                else new CustomGlobalData().save();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         if (isUBCLoad())
             UBC.UBCLoad(event);
     }
@@ -46,6 +62,8 @@ public class MTUtilsMod {
         HandlerHelper.registerAllHandler();
         configuration.save();
     }
+
+
 
     @Mod.EventHandler
     public void onServerLoaded(FMLServerStartedEvent event) {
