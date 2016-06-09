@@ -7,18 +7,23 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import exterminatorJeff.undergroundBiomes.api.NamedBlock;
 import gregapi.data.CS;
 import minetweaker.MineTweakerAPI;
+import minetweaker.api.data.IData;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.liquid.ILiquidStack;
+import minetweaker.mc1710.data.NBTConverter;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTException;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import ru.lionzxy.damagetweaker.mods.GregTechHandler;
 import ru.lionzxy.damagetweaker.mods.ubc.UBC;
-import ru.lionzxy.damagetweaker.nbt.Read;
-import ru.lionzxy.damagetweaker.nbt.Write;
+import ru.lionzxy.damagetweaker.nbt.CustomGlobalData;
+import ru.lionzxy.damagetweaker.nbt.CustomWorldData;
 
 /**
  * Created by nikit on 10.09.2015.
@@ -32,6 +37,21 @@ public class DamageTweaker {
     public void preInit(FMLPreInitializationEvent event) {
         if (isUBCLoad())
             UBC.UBCLoad(event);
+        CustomGlobalData customGlobalData = new CustomGlobalData();
+        NBTTagCompound nbtTagCompound = new NBTTagCompound();
+        nbtTagCompound.setString("test1", "test");
+        nbtTagCompound.setInteger("test2", 3);
+        nbtTagCompound.setTag("tagTest", new NBTTagCompound());
+        nbtTagCompound.setIntArray("arrtest", new int[]{6, 8, 9, 10, 11});
+        customGlobalData.setData(NBTConverter.from(nbtTagCompound, false));
+        System.out.println(customGlobalData.getData());
+        try {
+            IData data = NBTConverter.from(JsonToNBT.func_150315_a(nbtTagCompound.toString()), false);
+            System.out.println(data);
+            System.out.println(nbtTagCompound.toString());
+        } catch (NBTException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -39,10 +59,10 @@ public class DamageTweaker {
     public void postInit(FMLPostInitializationEvent event) {
 
         MinecraftForge.EVENT_BUS.register(new DropHandler());
-        //FMLCommonHandler.instance().bus().register(new DropHandler());
+        MineTweakerAPI.registerClass(NBTHandlers.class);
+        MineTweakerAPI.registerClass(CustomGlobalData.class);
+        MineTweakerAPI.registerClass(CustomWorldData.class);
         MineTweakerAPI.registerClass(MTHandlers.class);
-        MineTweakerAPI.registerClass(Read.class);
-        MineTweakerAPI.registerClass(Write.class);
         if (Loader.isModLoaded(CS.ModIDs.API))
             MineTweakerAPI.registerClass(GregTechHandler.class);
     }

@@ -1,17 +1,14 @@
 package ru.lionzxy.damagetweaker.nbt;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import cpw.mods.fml.common.FMLLog;
 import minetweaker.api.data.IData;
 import minetweaker.mc1710.data.NBTConverter;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTTagCompound;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.Iterator;
 
 /**
  * Created by lionzxy on 6/8/16.
@@ -22,14 +19,11 @@ public abstract class CustomData {
     private IData data;
 
     public CustomData() {
-        if (!load()) {
-            data = NBTConverter.from(getEmptyTag(), false);
-            save();
-        }
     }
 
     public IData getData() {
-        load();
+        if (!load())
+            data = NBTConverter.from(getEmptyTag(), false);
         return data;
     }
 
@@ -51,7 +45,7 @@ public abstract class CustomData {
             data = NBTConverter.from(getEmptyTag(), false);
         nbtTagCompound.setTag(key, NBTConverter.from(data));
 
-        return getFormatedText(getJson(nbtTagCompound).toString());
+        return nbtTagCompound.toString();
     }
 
     public boolean load() {
@@ -104,51 +98,6 @@ public abstract class CustomData {
         }
 
         FMLLog.fine("Data saved!");
-    }
-
-    public static String getFormatedText(String in) {
-        StringBuilder sb = new StringBuilder();
-        boolean isIgnore = false;
-        int tabCount = 0;
-        int b;
-        for (int i = 0; i < in.length(); i++) {
-            sb.append(in.charAt(i));
-            if (in.charAt(i) == '\"')
-                isIgnore = !isIgnore;
-            if (!isIgnore)
-                switch (in.charAt(i)) {
-                    case '{':
-                    case '[':
-                        tabCount++;
-                    case ',':
-                        sb.append('\n');
-                        for (b = 0; b < tabCount; b++)
-                            sb.append('\t');
-                        break;
-                    case '}':
-                    case ']':
-                        tabCount--;
-                        sb.deleteCharAt(sb.length() - 1);
-                        sb.append("\n");
-                        for (b = 0; b < tabCount; b++)
-                            sb.append('\t');
-                        sb.append(in.charAt(i));
-                }
-        }
-        return sb.toString();
-    }
-
-    public static JsonObject getJson(NBTTagCompound tagCompound) {
-        JsonObject jsonObject = new JsonObject();
-        for (Iterator iterator = tagCompound.func_150296_c().iterator(); iterator.hasNext(); ) {
-            String key = (String) iterator.next();
-            Object object = tagCompound.getTag(key);
-            if (object instanceof NBTTagCompound)
-                jsonObject.add(key, getJson((NBTTagCompound) object));
-            else
-                jsonObject.add(key, new Gson().toJsonTree(object));
-        }
-        return jsonObject;
     }
 
     public NBTTagCompound getEmptyTag() {

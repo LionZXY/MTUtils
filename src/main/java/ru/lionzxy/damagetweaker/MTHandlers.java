@@ -3,7 +3,6 @@ package ru.lionzxy.damagetweaker;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import minetweaker.MineTweakerAPI;
-import minetweaker.api.data.IData;
 import minetweaker.api.formatting.IFormattedText;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
@@ -15,9 +14,6 @@ import minetweaker.mc1710.item.MCItemStack;
 import minetweaker.mc1710.oredict.MCOreDictEntry;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
-import ru.lionzxy.damagetweaker.nbt.CustomGlobalData;
-import ru.lionzxy.damagetweaker.nbt.CustomWorldData;
-import ru.lionzxy.damagetweaker.nbt.Write;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -32,43 +28,6 @@ import java.util.Random;
 
 @ZenClass("mods.MTUtils")
 public class MTHandlers {
-    @ZenMethod
-    public static IData getWorldNBT() {
-        try {
-            return CustomWorldData.getWorld().getData();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @ZenMethod
-    public static void setWorldNBT(IData data) {
-        try {
-            CustomWorldData.getWorld().setData(data);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @ZenMethod
-    public static IData getGlobalNBT() {
-        try {
-            return CustomGlobalData.getInstance().getData();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @ZenMethod
-    public static void setGlobalNBT(IData data) {
-        try {
-            CustomGlobalData.getInstance().getData();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
     /*import mods.MTUtils
     Items:
         MTUtils.setItemMaxDamage(itemstack, damage);
@@ -119,7 +78,7 @@ public class MTHandlers {
 
 
     public static String[] splitString(String original, char split) {
-        return Write.splitToByte(original, (byte) split);
+        return NBTHandlers.splitToByte(original, (byte) split);
     }
 
     @ZenMethod

@@ -1,31 +1,19 @@
 package ru.lionzxy.damagetweaker.nbt;
 
 import minetweaker.api.data.IData;
-import minetweaker.mc1710.data.NBTConverter;
-import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldSavedData;
 import net.minecraft.world.storage.ISaveFormat;
-import net.minecraft.world.storage.MapStorage;
 import net.minecraft.world.storage.SaveHandler;
-import org.apache.commons.io.IOUtils;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenMethod;
 
-import java.io.*;
-import java.nio.charset.Charset;
+import java.io.File;
 
 /**
  * Created by lionzxy on 6/8/16.
  */
-public class CustomWorldData extends CustomData{
-    private static CustomWorldData worldData = null;
-
-    public CustomWorldData(){
-        super();
-        worldData = this;
-    }
+@ZenClass("mods.MTUtils.WorldData")
+public class CustomWorldData extends CustomData {
 
     public static File getWorldFolder() {
         MinecraftServer mcServerInstance = MinecraftServer.getServer();
@@ -36,13 +24,35 @@ public class CustomWorldData extends CustomData{
     }
 
     public static CustomWorldData getWorld() {
-        if (worldData == null)
-            worldData = new CustomWorldData();
-        return worldData;
+        return new CustomWorldData();
     }
 
     @Override
     File getFile() {
-        return new File(getWorldFolder(),"MTUtilsData.json");
+        return new File(getWorldFolder(), "MTUtilsData.nbt");
+    }
+
+    @ZenMethod
+    public static IData get() {
+        try {
+            return getWorld().getData();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @ZenMethod
+    public static void set(IData data) {
+        try {
+            getWorld().setData(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @ZenMethod
+    public static boolean exists() {
+        return getWorld().getFile().exists();
     }
 }
