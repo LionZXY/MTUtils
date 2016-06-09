@@ -1,4 +1,4 @@
-package ru.lionzxy.damagetweaker.nbt;
+package ru.lionzxy.damagetweaker.models;
 
 import cpw.mods.fml.common.FMLLog;
 import minetweaker.api.data.IData;

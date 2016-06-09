@@ -5,7 +5,7 @@ import minetweaker.MineTweakerAPI;
 import minetweaker.api.formatting.IFormattedText;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.liquid.ILiquidStack;
-import ru.lionzxy.damagetweaker.DamageTweaker;
+import ru.lionzxy.damagetweaker.MTUtilsMod;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -21,7 +21,7 @@ public class GregTechHandler {
     public static void addCustomRecipe(String fieldName, boolean aOptimize, long aEUt, long aDuration, long[] aChances, IItemStack[] aInputs, ILiquidStack aFluidInput, ILiquidStack aFluidOutput, IItemStack... aOutputs) {
         try {
             Recipe.RecipeMap recipeMap = (Recipe.RecipeMap) Recipe.RecipeMap.class.getField(fieldName).get(null);
-            recipeMap.addRecipeX(aOptimize, aEUt, aDuration, aChances, DamageTweaker.toStacks(aInputs), DamageTweaker.toFluid(aFluidInput), DamageTweaker.toFluid(aFluidOutput), DamageTweaker.toStacks(aOutputs));
+            recipeMap.addRecipeX(aOptimize, aEUt, aDuration, aChances, MTUtilsMod.toStacks(aInputs), MTUtilsMod.toFluid(aFluidInput), MTUtilsMod.toFluid(aFluidOutput), MTUtilsMod.toStacks(aOutputs));
             System.out.println("[MTUtilsGT] Recipe for variable " + fieldName + " add!");
             MineTweakerAPI.logInfo("[MTUtilsGT] Recipe for variable " + fieldName + " add!");
         } catch (Exception e) {
@@ -34,7 +34,7 @@ public class GregTechHandler {
         try {
             Recipe.RecipeMap recipeMap = (Recipe.RecipeMap) Recipe.RecipeMap.class.getField(fieldName).get(null);
 
-            for (Recipe recipe : recipeMap.getNEIRecipes(DamageTweaker.toStacks(output))) {
+            for (Recipe recipe : recipeMap.getNEIRecipes(MTUtilsMod.toStacks(output))) {
                 recipeMap.mRecipeList.remove(recipe);
             }
         } catch (Exception e) {

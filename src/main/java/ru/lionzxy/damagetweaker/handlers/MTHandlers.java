@@ -1,4 +1,4 @@
-package ru.lionzxy.damagetweaker;
+package ru.lionzxy.damagetweaker.handlers;
 
 
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -14,6 +14,8 @@ import minetweaker.mc1710.item.MCItemStack;
 import minetweaker.mc1710.oredict.MCOreDictEntry;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+import ru.lionzxy.damagetweaker.MTUtilsMod;
+import ru.lionzxy.damagetweaker.models.DropsObject;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -26,42 +28,8 @@ import java.util.Random;
  * Created by nikit on 10.09.2015.
  */
 
-@ZenClass("mods.MTUtils")
+@ZenClass("mods.MTUtils.Utils")
 public class MTHandlers {
-    /*import mods.MTUtils
-    Items:
-        MTUtils.setItemMaxDamage(itemstack, damage);
-        MTUtils.getItemMaxDamage(itemstack); (Return int)
-        MTUtils.getItemDamage(itemstack); (Return int)
-        Blocks
-        MTUtils.setHarvestLevel(itemstack, String tooltip, int harvestLevel);
-        MTUtils.setBlockUnbreakable(itemstack);
-        MTUtils.setHardness(itemstack, float hardness);
-        MTUtils.setLightLevel(itemstack, float lightLevel);
-        MTUtils.setLightOpacity(itemstack, int lightOpacity);
-        MTUtils.setResistance(itemstack, float resistance);
-        MTUtils.setTextureName(itemstack, String texturename);
-        MTUtils.getHarvestLevel(itemstack); (Return int)
-        MTUtils.getHarvestTool(itemstack); (Return String)
-        MTUtils.getTextureName(itemstack, int side); (Return String)
-    Utils:
-        MTUtils.getIntFromString(string); (Return int)
-        MTUtils.getFloatFromString(string); (Return float)
-        MTUtils.getStringFromInt(int); (Return String)
-        MTUtils.getStringFromFloat(float); (Return String)
-        MTUtils.getStringFromFormattedText(IFormattedText text); (Return String)
-        MTUtils.getStringFromFormattedString(IMCFormattedString text); (Return String)
-        MTUtils.getCrossMatch(IOreDictEntry ... oreDictEntries); (Return IItemStack[])
-        MTUtils.getIngredientFromString(String in) (Return IIngredient)
-        MTUtils.getItemStackFromString(String in) (Return IItemStack)
-        MTUtils.getIOreDictEntryFromString(String in) (Return IOreDictEntry)
-        MTUtils.getIFormatedTextFromString(String in) (Return IFormattedText)
-        MTUtils.getIMCFormattedTextFromString(String in) (Return IMCFormattedString)
-    Drops:
-        MTUtils.clearDrops() //Recreated HashMap drops
-        MTUtils.setBlockDrops(@Nullable IItemStack harvester, IItemStack block, IItemStack drops[], float quantiDrop[], IItemStack falseDrops[])
-    */
-
 
     @ZenMethod
     public static void addMultilineShiftTooltip(IItemStack stack, IFormattedText strs, String s) {
@@ -95,12 +63,12 @@ public class MTHandlers {
 
     @ZenMethod
     public static void setItemMaxDamage(IItemStack input, int damage) {
-        DamageTweaker.toStack(input).getItem().setMaxDamage(damage);
+        MTUtilsMod.toStack(input).getItem().setMaxDamage(damage);
     }
 
     @ZenMethod
     public static int getItemMaxDamage(IItemStack input) {
-        return DamageTweaker.toStack(input).getItem().getMaxDamage();
+        return MTUtilsMod.toStack(input).getItem().getMaxDamage();
     }
 
     @ZenMethod
@@ -110,60 +78,60 @@ public class MTHandlers {
 
     @ZenMethod
     public static int getItemDamage(IItemStack input) {
-        return DamageTweaker.toStack(input).getItemDamage();
+        return MTUtilsMod.toStack(input).getItemDamage();
     }
 
     @ZenMethod
     public static void setHarvestLevel(IItemStack input, String tooltip, int harvestLevel) {
-        if (DamageTweaker.toStack(input).getItemDamage() == 0)
-            DamageTweaker.toBlock(input).setHarvestLevel(tooltip, harvestLevel);
+        if (MTUtilsMod.toStack(input).getItemDamage() == 0)
+            MTUtilsMod.toBlock(input).setHarvestLevel(tooltip, harvestLevel);
         else
-            DamageTweaker.toBlock(input).setHarvestLevel(tooltip, harvestLevel, DamageTweaker.toStack(input).getItemDamage());
+            MTUtilsMod.toBlock(input).setHarvestLevel(tooltip, harvestLevel, MTUtilsMod.toStack(input).getItemDamage());
     }
 
     @ZenMethod
     public static void setBlockUnbreakable(IItemStack input) {
-        DamageTweaker.toBlock(input).setBlockUnbreakable();
+        MTUtilsMod.toBlock(input).setBlockUnbreakable();
     }
 
     @ZenMethod
     public static void setHardness(IItemStack input, float hardness) {
-        DamageTweaker.toBlock(input).setHardness(hardness);
+        MTUtilsMod.toBlock(input).setHardness(hardness);
     }
 
     @ZenMethod
     public static void setLightLevel(IItemStack input, float ll) {
-        DamageTweaker.toBlock(input).setLightLevel(ll);
+        MTUtilsMod.toBlock(input).setLightLevel(ll);
     }
 
     @ZenMethod
     public static void setLightOpacity(IItemStack input, int opacity) {
-        DamageTweaker.toBlock(input).setLightOpacity(opacity);
+        MTUtilsMod.toBlock(input).setLightOpacity(opacity);
     }
 
     @ZenMethod
     public static void setResistance(IItemStack input, float resistance) {
-        DamageTweaker.toBlock(input).setResistance(resistance);
+        MTUtilsMod.toBlock(input).setResistance(resistance);
     }
 
     @ZenMethod
     public static int getHarvestLevel(IItemStack input) {
-        return DamageTweaker.toBlock(input).getHarvestLevel(DamageTweaker.toStack(input).getItemDamage());
+        return MTUtilsMod.toBlock(input).getHarvestLevel(MTUtilsMod.toStack(input).getItemDamage());
     }
 
     @ZenMethod
     public static String getHarvestTool(IItemStack input) {
-        return DamageTweaker.toBlock(input).getHarvestTool(DamageTweaker.toStack(input).getItemDamage());
+        return MTUtilsMod.toBlock(input).getHarvestTool(MTUtilsMod.toStack(input).getItemDamage());
     }
 
     @ZenMethod
     public static String getTextureName(IItemStack input, int side) {
-        return DamageTweaker.toBlock(input).getBlockTextureFromSide(side).getIconName();
+        return MTUtilsMod.toBlock(input).getBlockTextureFromSide(side).getIconName();
     }
 
     @ZenMethod
     public static void setTextureName(IItemStack input, String textureName) {
-        DamageTweaker.toBlock(input).setBlockTextureName(textureName);
+        MTUtilsMod.toBlock(input).setBlockTextureName(textureName);
     }
 
     @ZenMethod
@@ -260,6 +228,16 @@ public class MTHandlers {
     }
 
     @ZenMethod
+    public static IOreDictEntry getIOreDictEntryFromString(IFormattedText in) {
+        return getIOreDictEntryFromString(getStringFromFormattedText(in));
+    }
+
+    @ZenMethod
+    public static IOreDictEntry getIOreDictEntryFromString(IMCFormattedString in) {
+        return getIOreDictEntryFromString(getStringFromFormattedString(in));
+    }
+
+    @ZenMethod
     public static IFormattedText getIFormatedTextFromString(String in) {
         return new FormattedString(in);
     }
@@ -278,16 +256,16 @@ public class MTHandlers {
     public static void setBlockDrops(@Nullable IItemStack harvester, IItemStack block, IItemStack drops[], float quantiDrop[], IItemStack falseDrops[]) {
 
         if (DropsObject.dropsObj != null)
-            if (block != null && DamageTweaker.toBlock(block) != null) {
-                DropsObject.dropsObj.add(new DropsObject(DamageTweaker.toStack(harvester), DamageTweaker.toStacks(drops),
-                        quantiDrop, DamageTweaker.toStacks(falseDrops), DamageTweaker.toStack(block)));
+            if (block != null && MTUtilsMod.toBlock(block) != null) {
+                DropsObject.dropsObj.add(new DropsObject(MTUtilsMod.toStack(harvester), MTUtilsMod.toStacks(drops),
+                        quantiDrop, MTUtilsMod.toStacks(falseDrops), MTUtilsMod.toStack(block)));
             } else MineTweakerAPI.logError("BLOCK MUST NOT BE NULL!!!");
         else MineTweakerAPI.logError("Use MTUtils.clearDrop(); in start your script!!!");
     }
 
     @ZenMethod
     public static boolean eqItemStack(IItemStack... stacks) {
-        ItemStack[] stacks1 = DamageTweaker.toStacks(stacks);
+        ItemStack[] stacks1 = MTUtilsMod.toStacks(stacks);
         for (int i = 1; i < stacks1.length; i++)
             if (!stacks1[i].isItemEqual(stacks1[i - 1]))
                 return false;

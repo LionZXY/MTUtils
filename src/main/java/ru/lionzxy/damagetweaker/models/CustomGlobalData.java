@@ -1,4 +1,4 @@
-package ru.lionzxy.damagetweaker.nbt;
+package ru.lionzxy.damagetweaker.models;
 
 import minetweaker.api.data.IData;
 import net.minecraft.client.Minecraft;

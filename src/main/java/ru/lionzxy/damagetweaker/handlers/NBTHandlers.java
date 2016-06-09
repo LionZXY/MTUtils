@@ -1,4 +1,4 @@
-package ru.lionzxy.damagetweaker;
+package ru.lionzxy.damagetweaker.handlers;
 
 import minetweaker.api.data.IData;
 import minetweaker.mc1710.data.NBTConverter;
@@ -15,6 +15,12 @@ import java.util.Map;
  */
 @ZenClass("mods.MTUtils.NBT")
 public class NBTHandlers {
+
+    @ZenMethod
+    public static boolean isExists(IData nbt, String path) {
+        return getTagByPath(nbt, path) != null;
+    }
+
     @ZenMethod
     public static Map readMapFromNBT(IData nbt, String path) {
         return getTagByPath(nbt, path).asMap();

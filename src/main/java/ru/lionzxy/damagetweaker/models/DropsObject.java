@@ -1,4 +1,4 @@
-package ru.lionzxy.damagetweaker;
+package ru.lionzxy.damagetweaker.models;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
