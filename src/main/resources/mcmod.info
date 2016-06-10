@@ -2,13 +2,13 @@
 {
   "modid": "MTUtils",
   "name": "MTUtils",
-  "description": "Special mod for Otik",
-  "version": "1.4.1",
-  "mcversion": "1.7.10",
+  "description": ":)",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
   "url": "",
-  "updateUrl": "",
+  "updateUrl": "http://minecraft.curseforge.com/projects/mtutils/files",
   "authorList": ["LionZXY"],
-  "credits": "The Forge and FML guys, for making FML",
+  "credits": "Big Thanks EverybodyLise for documentation",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
