@@ -18,78 +18,21 @@ import java.util.Map;
 @ZenClass("mods.MTUtils.NBT")
 public class NBTHandlers {
 
-    @ZenMethod
-    public static boolean isExists(IData nbt, String path) {
-        return getTagByPath(nbt, path) != null;
-    }
-
-    @ZenMethod
-    public static Map readMapFromNBT(IData nbt, String path) {
-        return getTagByPath(nbt, path).asMap();
-    }
-
-    @ZenMethod
-    public static short readShortFromNBT(IData nbt, String path) {
-        return getTagByPath(nbt, path).asShort();
-    }
-
-    @ZenMethod
-    public static String readStringFromNBT(IData nbt, String path) {
-        return getTagByPath(nbt, path).asString();
-    }
-
-    @ZenMethod
-    public static int readIntFromNBT(IData nbt, String path) {
-        return getTagByPath(nbt, path).asInt();
-    }
+    @ZenMethod public static boolean    isExists(IData nbt, String path) {              return getTagByPath(nbt, path) != null;}
+    @ZenMethod public static Map        readMapFromNBT(IData nbt, String path) {        return getTagByPath(nbt, path).asMap();}
+    @ZenMethod public static short      readShortFromNBT(IData nbt, String path) {      return getTagByPath(nbt, path).asShort();}
+    @ZenMethod public static String     readStringFromNBT(IData nbt, String path) {     return getTagByPath(nbt, path).asString();}
+    @ZenMethod public static int        readIntFromNBT(IData nbt, String path) {        return getTagByPath(nbt, path).asInt();}
+    @ZenMethod public static int[]      readIntArrayFromNBT(IData nbt, String path) {   return getTagByPath(nbt, path).asIntArray();}
+    @ZenMethod public static List       readListFromNBT(IData nbt, String path) {       return getTagByPath(nbt, path).asList();}
+    @ZenMethod public static long       readLongFromNBT(IData nbt, String path) {       return getTagByPath(nbt, path).asLong();}
+    @ZenMethod public static byte       readByteFromNBT(IData nbt, String path) {       return getTagByPath(nbt, path).asByte();}
+    @ZenMethod public static byte[]     readByteArrayFromNBT(IData nbt, String path) {  return getTagByPath(nbt, path).asByteArray();}
+    @ZenMethod public static double     readDoubleFromNBT(IData nbt, String path) {     return getTagByPath(nbt, path).asDouble();}
+    @ZenMethod public static float      readFloatFromNBT(IData nbt, String path) {      return getTagByPath(nbt, path).asFloat();}
+    @ZenMethod public static boolean    readBoolFromNBT(IData nbt, String path) {       return getTagByPath(nbt, path).asBool();}
 
 
-    @ZenMethod
-    public static int[] readIntArrayFromNBT(IData nbt, String path) {
-        return getTagByPath(nbt, path).asIntArray();
-    }
-
-
-    @ZenMethod
-    public static List readListFromNBT(IData nbt, String path) {
-        return getTagByPath(nbt, path).asList();
-    }
-
-
-    @ZenMethod
-    public static long readLongFromNBT(IData nbt, String path) {
-        return getTagByPath(nbt, path).asLong();
-    }
-
-    @ZenMethod
-    public static byte readByteFromNBT(IData nbt, String path) {
-        return getTagByPath(nbt, path).asByte();
-    }
-
-    @ZenMethod
-    public static byte[] readByteArrayFromNBT(IData nbt, String path) {
-        return getTagByPath(nbt, path).asByteArray();
-    }
-
-    @ZenMethod
-    public static double readDoubleFromNBT(IData nbt, String path) {
-        return getTagByPath(nbt, path).asDouble();
-    }
-
-    @ZenMethod
-    public static float readFloatFromNBT(IData nbt, String path) {
-        return getTagByPath(nbt, path).asFloat();
-    }
-
-    @ZenMethod
-    public static boolean readBoolFromNBT(IData nbt, String path) {
-        return getTagByPath(nbt, path).asBool();
-    }
-
-    public static IData getTagByPath(IData data, String path) {
-        NBTTagCompound tagCompound = (NBTTagCompound) NBTConverter.from(data);
-        return NBTConverter.from(getTagByPath(tagCompound, path).getTag(path.substring(path.lastIndexOf(".") + 1)), false);
-    }
 
     @ZenMethod
     public static IData writeToNBT(IData data, String path, boolean value) {
@@ -187,5 +130,10 @@ public class NBTHandlers {
             } else sb.append(str.charAt(i));
         toExit.add(sb.toString());
         return toExit.toArray(new String[toExit.size()]);
+    }
+
+    public static IData getTagByPath(IData data, String path) {
+        NBTTagCompound tagCompound = (NBTTagCompound) NBTConverter.from(data);
+        return NBTConverter.from(getTagByPath(tagCompound, path).getTag(path.substring(path.lastIndexOf(".") + 1)), false);
     }
 }

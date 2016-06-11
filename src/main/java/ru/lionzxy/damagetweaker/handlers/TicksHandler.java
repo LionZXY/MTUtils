@@ -1,11 +1,5 @@
 package ru.lionzxy.damagetweaker.handlers;
 
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.event.FMLServerStartedEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import net.minecraftforge.event.world.WorldEvent;
-
 import java.util.ArrayList;
 import java.util.List;
 
