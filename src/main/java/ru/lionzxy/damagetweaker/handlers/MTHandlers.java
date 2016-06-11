@@ -2,6 +2,7 @@ package ru.lionzxy.damagetweaker.handlers;
 
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.common.registry.GameRegistry;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.formatting.IFormattedText;
@@ -13,6 +14,7 @@ import minetweaker.mc1710.formatting.FormattedString;
 import minetweaker.mc1710.formatting.IMCFormattedString;
 import minetweaker.mc1710.item.MCItemStack;
 import minetweaker.mc1710.oredict.MCOreDictEntry;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.oredict.OreDictionary;
@@ -23,6 +25,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Delayed;
@@ -33,6 +36,18 @@ import java.util.concurrent.Delayed;
 
 @ZenClass("mods.MTUtils.Utils")
 public class MTHandlers {
+    public static final HashMap<Item, String> itemToString = new HashMap<Item, String>();
+
+    static {
+        TicksHandler.addTasksAfterSererLoaded(new Runnable() {
+            @Override
+            public void run() {
+                for (Object object : GameData.getItemRegistry().getKeys()) {
+                    itemToString.put(GameData.getItemRegistry().getObject((String) object), (String) object);
+                }
+            }
+        });
+    }
 
     @ZenMethod
     public static void executeCommand(IFormattedText cmd) {
@@ -50,8 +65,33 @@ public class MTHandlers {
     }
 
     @ZenMethod
+    public static IFormattedText concat(IFormattedText... strs) {
+        String strings[] = new String[strs.length];
+        for (int i = 0; i < strs.length; i++)
+            strings[i] = getStringFromFormattedText(strs[i]);
+        return getIFormatedTextFromString(concat(strings));
+    }
+
+    @ZenMethod
+    public static String concat(String... strs) {
+        StringBuilder sb = new StringBuilder();
+        for (String str : strs)
+            sb.append(str);
+        return sb.toString();
+    }
+
+    @ZenMethod
+    public static void addMultilineShiftTooltip(IItemStack stack, IFormattedText strs) {
+        addMultilineShiftTooltip(stack, strs, "\n");
+    }
+
+    @ZenMethod
+    public static void addMultilineTooltip(IItemStack stack, IFormattedText strs) {
+        addMultilineTooltip(stack, strs, "\n");
+    }
+
+    @ZenMethod
     public static void addMultilineShiftTooltip(IItemStack stack, IFormattedText strs, String s) {
-        //((FormattedMarkupString) strs)
         for (String str : splitString(MTHandlers.getStringFromFormattedText(strs), s))
             IngredientTooltips.addShiftTooltip(stack, MTHandlers.getIFormatedTextFromString(str));
     }
@@ -72,11 +112,6 @@ public class MTHandlers {
         if (split.length() == 1)
             return splitString(original, split.charAt(0));
         return original.split(split);
-    }
-
-    @ZenMethod
-    public static IFormattedText newLine() {
-        return getIFormatedTextFromString("\n");
     }
 
     @ZenMethod
@@ -153,12 +188,13 @@ public class MTHandlers {
     }
 
     @ZenMethod
+    public static int getIntFromString(IFormattedText from) {
+        return Integer.parseInt(getStringFromFormattedText(from));
+    }
+
+    @ZenMethod
     public static int getIntFromString(String from) {
-        String newStr = "";
-        for (int i = 0; i < from.length(); i++)
-            if (isStringInt(from.charAt(i) + ""))
-                newStr += from.charAt(i);
-        return Integer.parseInt(newStr);
+        return Integer.parseInt(from);
     }
 
     @ZenMethod
@@ -168,12 +204,12 @@ public class MTHandlers {
 
     @ZenMethod
     public static String getStringFromInt(int i) {
-        return i + "";
+        return String.valueOf(i);
     }
 
     @ZenMethod
     public static String getStringFromFloat(float i) {
-        return i + "";
+        return String.valueOf(i);
     }
 
     @ZenMethod
@@ -200,26 +236,18 @@ public class MTHandlers {
     }
 
     @ZenMethod
-    public static IItemStack[] getCrossMatch2(IOreDictEntry oreDictEntry, IOreDictEntry oreDictEntry2) {
-        return getCrossMatch(oreDictEntry, oreDictEntry2);
+    public static String getItemStackID(IItemStack itemStack) {
+        return itemToString.get(MTUtilsMod.toStack(itemStack).getItem());
     }
 
     @ZenMethod
-    public static IItemStack[] getCrossMatch3(IOreDictEntry oreDictEntry, IOreDictEntry oreDictEntry2, IOreDictEntry oreDictEntry3) {
-        return getCrossMatch(oreDictEntry, oreDictEntry2, oreDictEntry3);
+    public static String getOreDictEntryID(IOreDictEntry entry) {
+        return entry.getName();
     }
 
     @ZenMethod
-    public static IItemStack[] getCrossMatch4(IOreDictEntry oreDictEntry, IOreDictEntry oreDictEntry2,
-                                              IOreDictEntry oreDictEntry3, IOreDictEntry oreDictEntry4) {
-        return getCrossMatch(oreDictEntry, oreDictEntry2, oreDictEntry3, oreDictEntry4);
-    }
-
-    @ZenMethod
-    public static IItemStack[] getCrossMatch5(IOreDictEntry oreDictEntry, IOreDictEntry oreDictEntry2,
-                                              IOreDictEntry oreDictEntry3, IOreDictEntry oreDictEntry4,
-                                              IOreDictEntry oreDictEntry5) {
-        return getCrossMatch(oreDictEntry, oreDictEntry2, oreDictEntry3, oreDictEntry4, oreDictEntry5);
+    public static boolean isNull(Object object){
+        return object == null;
     }
 
     @ZenMethod
@@ -298,15 +326,11 @@ public class MTHandlers {
         return true;
     }
 
-
+    //@ZenMethod
     public static boolean contains(ItemStack itemStack, IOreDictEntry... oreDictEntry) {
         for (IOreDictEntry oreDictEntry1 : oreDictEntry)
             if (!oreDictEntry1.contains(new MCItemStack(itemStack)))
                 return false;
         return true;
-    }
-
-    public static boolean isStringInt(String from) {
-        return (byte) '0' - 1 < from.charAt(0) && from.charAt(0) > (byte) '9' + 1;
     }
 }

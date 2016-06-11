@@ -16,7 +16,7 @@ public class TicksHandler {
     private static List<Runnable> tasks = new ArrayList<Runnable>();
     private static boolean serverStarted = false;
 
-    public static void onServerLoaded(FMLServerStartedEvent event) {
+    public static void onServerLoaded() {
         serverStarted = true;
         if(!tasks.isEmpty()){
             for(Runnable runnable : tasks)

@@ -64,10 +64,9 @@ public class MTUtilsMod {
     }
 
 
-
     @Mod.EventHandler
     public void onServerLoaded(FMLServerStartedEvent event) {
-        TicksHandler.onServerLoaded(event);
+        TicksHandler.onServerLoaded();
     }
 
 
