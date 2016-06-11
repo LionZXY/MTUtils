@@ -125,6 +125,11 @@ public class MTHandlers {
     }
 
     @ZenMethod
+    public static int getRandomInt(int from, int to) {
+        return getRandomInt(to - from) + from;
+    }
+
+    @ZenMethod
     public static int getRandomInt(int range) {
         return new Random().nextInt(range);
     }
@@ -246,7 +251,7 @@ public class MTHandlers {
     }
 
     @ZenMethod
-    public static boolean isNull(Object object){
+    public static boolean isNull(Object object) {
         return object == null;
     }
 
