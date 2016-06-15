@@ -62,26 +62,28 @@ public class MTHandlers {
     @ZenMethod public static String             getTextureName(IItemStack input, int side) {                                return MTUtilsMod.toBlock(input).getBlockTextureFromSide(side).getIconName();}
     @ZenMethod public static int                getItemDamage(IItemStack input) {                                           return MTUtilsMod.toStack(input).getItemDamage();}
     @ZenMethod public static int                getItemMaxDamage(IItemStack input) {                                        return MTUtilsMod.toStack(input).getItem().getMaxDamage();}
-    @ZenMethod public static int                StringToInt(IFormattedText from) {                                     return Integer.parseInt(FormattedTextToString(from));}
-    @ZenMethod public static int                StringToInt(String from) {                                             return Integer.parseInt(from);}
-    @ZenMethod public static float              StringToFloat(String from) {                                           return Float.parseFloat(from);}
-    @ZenMethod public static String             IntToString(int i) {                                                   return String.valueOf(i);}
-    @ZenMethod public static String             FloatToString(float i) {                                               return String.valueOf(i);}
-    @ZenMethod public static String             FormattedTextToString(IFormattedText text) {                           return ((FormattedString) text).getTooltipString();}
-    @ZenMethod public static String             FormattedStringToString(IMCFormattedString text) {                     return text.getTooltipString();}
-    @ZenMethod public static int                randomInt(int from, int to) {                                            return randomInt(to - from) + from;}
-    @ZenMethod public static int                randomInt(int range) {                                                   return new Random().nextInt(range);}
+    @ZenMethod public static int                StringToInt(IFormattedText from) {                                          return Integer.parseInt(FormattedTextToString(from));}
+    @ZenMethod public static int                StringToInt(String from) {                                                  return Integer.parseInt(from);}
+    @ZenMethod public static int                FormattedTextToInt(IFormattedText from){                                    return StringToInt(FormattedTextToString(from));}
+    @ZenMethod public static float              FormattedTextToFloat(IFormattedText from) {                                 return Float.parseFloat(FormattedTextToString(from));}
+    @ZenMethod public static float              StringToFloat(String from) {                                                return Float.parseFloat(from);}
+    @ZenMethod public static String             IntToString(int i) {                                                        return String.valueOf(i);}
+    @ZenMethod public static String             FloatToString(float i) {                                                    return String.valueOf(i);}
+    @ZenMethod public static String             FormattedTextToString(IFormattedText text) {                                return ((FormattedString) text).getTooltipString();}
+    @ZenMethod public static String             FormattedStringToString(IMCFormattedString text) {                          return text.getTooltipString();}
+    @ZenMethod public static int                randomInt(int from, int to) {                                               return randomInt(to - from) + from;}
+    @ZenMethod public static int                randomInt(int range) {                                                      return new Random().nextInt(range);}
     @ZenMethod public static String             getItemStackID(IItemStack itemStack) {                                      return itemToString.get(MTUtilsMod.toStack(itemStack).getItem());}
     @ZenMethod public static String             getOreDictEntryID(IOreDictEntry entry) {                                    return entry.getName();}
     @ZenMethod public static boolean            isNull(Object object) {                                                     return object == null;}
     @ZenMethod public static boolean            isNull(IIngredient object) {                                                return object == null;}
     @ZenMethod public static boolean            isNull(IItemStack object) {                                                 return object == null;}
     @ZenMethod public static boolean            isNull(IOreDictEntry object) {                                              return object == null;}
-    @ZenMethod public static IOreDictEntry      StringToOreDict(String in) {                                     return new MCOreDictEntry(OreDictionary.getOreID(in));}
-    @ZenMethod public static IOreDictEntry      StringToOreDict(IFormattedText in) {                             return StringToOreDict(FormattedTextToString(in));}
-    @ZenMethod public static IOreDictEntry      StringToOreDict(IMCFormattedString in) {                         return StringToOreDict(FormattedStringToString(in));}
-    @ZenMethod public static IFormattedText     StringToOreFormattedText(String in) {                                     return new FormattedString(in);}
-    @ZenMethod public static IMCFormattedString StringToFormattedString(String in) {                                  return new FormattedString(in);}
+    @ZenMethod public static IOreDictEntry      getOreDictEntryFromString(String in) {                                      return new MCOreDictEntry(OreDictionary.getOreID(in));}
+    @ZenMethod public static IOreDictEntry      getOreDictEntryFromString(IFormattedText in) {                              return getOreDictEntryFromString(FormattedTextToString(in));}
+    @ZenMethod public static IOreDictEntry      getOreDictEntryFromString(IMCFormattedString in) {                          return getOreDictEntryFromString(FormattedStringToString(in));}
+    @ZenMethod public static IFormattedText     StringToFormattedText(String in) {                                          return new FormattedString(in);}
+    @ZenMethod public static IMCFormattedString StringToFormattedString(String in) {                                        return new FormattedString(in);}
     @ZenMethod public static void               executeCommand(IFormattedText cmd) {                                        executeCommand(FormattedTextToString(cmd));}
     @ZenMethod public static void               executeCommand(final String cmd) {                                          TicksHandler.addTasksAfterSererLoaded(new Runnable() {@Override public void run() {MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(), cmd);}});}
     @ZenMethod public static void               addMultilineShiftTooltip(IItemStack stack, String strs) {                   addMultilineShiftTooltip(stack, StringToFormattedString(strs));}
