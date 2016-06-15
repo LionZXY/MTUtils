@@ -48,7 +48,7 @@ public class MTHandlers {
     }
 
 
-
+    //No java-style
     @ZenMethod public static void               setItemMaxDamage(IItemStack input, int damage){                             MTUtilsMod.toStack(input).getItem().setMaxDamage(damage);}
     @ZenMethod public static void               setBlockUnbreakable(IItemStack input) {                                     MTUtilsMod.toBlock(input).setBlockUnbreakable();}
     @ZenMethod public static void               setHardness(IItemStack input, float hardness) {                             MTUtilsMod.toBlock(input).setHardness(hardness);}
@@ -62,36 +62,36 @@ public class MTHandlers {
     @ZenMethod public static String             getTextureName(IItemStack input, int side) {                                return MTUtilsMod.toBlock(input).getBlockTextureFromSide(side).getIconName();}
     @ZenMethod public static int                getItemDamage(IItemStack input) {                                           return MTUtilsMod.toStack(input).getItemDamage();}
     @ZenMethod public static int                getItemMaxDamage(IItemStack input) {                                        return MTUtilsMod.toStack(input).getItem().getMaxDamage();}
-    @ZenMethod public static int                getIntFromString(IFormattedText from) {                                     return Integer.parseInt(getStringFromFormattedText(from));}
-    @ZenMethod public static int                getIntFromString(String from) {                                             return Integer.parseInt(from);}
-    @ZenMethod public static float              getFloatFromString(String from) {                                           return Float.parseFloat(from);}
-    @ZenMethod public static String             getStringFromInt(int i) {                                                   return String.valueOf(i);}
-    @ZenMethod public static String             getStringFromFloat(float i) {                                               return String.valueOf(i);}
-    @ZenMethod public static String             getStringFromFormattedText(IFormattedText text) {                           return ((FormattedString) text).getTooltipString();}
-    @ZenMethod public static String             getStringFromFormattedString(IMCFormattedString text) {                     return text.getTooltipString();}
-    @ZenMethod public static int                getRandomInt(int from, int to) {                                            return getRandomInt(to - from) + from;}
-    @ZenMethod public static int                getRandomInt(int range) {                                                   return new Random().nextInt(range);}
+    @ZenMethod public static int                StringToInt(IFormattedText from) {                                     return Integer.parseInt(FormattedTextToString(from));}
+    @ZenMethod public static int                StringToInt(String from) {                                             return Integer.parseInt(from);}
+    @ZenMethod public static float              StringToFloat(String from) {                                           return Float.parseFloat(from);}
+    @ZenMethod public static String             IntToString(int i) {                                                   return String.valueOf(i);}
+    @ZenMethod public static String             FloatToString(float i) {                                               return String.valueOf(i);}
+    @ZenMethod public static String             FormattedTextToString(IFormattedText text) {                           return ((FormattedString) text).getTooltipString();}
+    @ZenMethod public static String             FormattedStringToString(IMCFormattedString text) {                     return text.getTooltipString();}
+    @ZenMethod public static int                randomInt(int from, int to) {                                            return randomInt(to - from) + from;}
+    @ZenMethod public static int                randomInt(int range) {                                                   return new Random().nextInt(range);}
     @ZenMethod public static String             getItemStackID(IItemStack itemStack) {                                      return itemToString.get(MTUtilsMod.toStack(itemStack).getItem());}
     @ZenMethod public static String             getOreDictEntryID(IOreDictEntry entry) {                                    return entry.getName();}
     @ZenMethod public static boolean            isNull(Object object) {                                                     return object == null;}
     @ZenMethod public static boolean            isNull(IIngredient object) {                                                return object == null;}
     @ZenMethod public static boolean            isNull(IItemStack object) {                                                 return object == null;}
     @ZenMethod public static boolean            isNull(IOreDictEntry object) {                                              return object == null;}
-    @ZenMethod public static IOreDictEntry      getIOreDictEntryFromString(String in) {                                     return new MCOreDictEntry(OreDictionary.getOreID(in));}
-    @ZenMethod public static IOreDictEntry      getIOreDictEntryFromString(IFormattedText in) {                             return getIOreDictEntryFromString(getStringFromFormattedText(in));}
-    @ZenMethod public static IOreDictEntry      getIOreDictEntryFromString(IMCFormattedString in) {                         return getIOreDictEntryFromString(getStringFromFormattedString(in));}
-    @ZenMethod public static IFormattedText     getIFormatedTextFromString(String in) {                                     return new FormattedString(in);}
-    @ZenMethod public static IMCFormattedString getIMCFormattedTextFromString(String in) {                                  return new FormattedString(in);}
-    @ZenMethod public static void               executeCommand(IFormattedText cmd) {                                        executeCommand(getStringFromFormattedText(cmd));}
+    @ZenMethod public static IOreDictEntry      StringToOreDict(String in) {                                     return new MCOreDictEntry(OreDictionary.getOreID(in));}
+    @ZenMethod public static IOreDictEntry      StringToOreDict(IFormattedText in) {                             return StringToOreDict(FormattedTextToString(in));}
+    @ZenMethod public static IOreDictEntry      StringToOreDict(IMCFormattedString in) {                         return StringToOreDict(FormattedStringToString(in));}
+    @ZenMethod public static IFormattedText     StringToOreFormattedText(String in) {                                     return new FormattedString(in);}
+    @ZenMethod public static IMCFormattedString StringToFormattedString(String in) {                                  return new FormattedString(in);}
+    @ZenMethod public static void               executeCommand(IFormattedText cmd) {                                        executeCommand(FormattedTextToString(cmd));}
     @ZenMethod public static void               executeCommand(final String cmd) {                                          TicksHandler.addTasksAfterSererLoaded(new Runnable() {@Override public void run() {MinecraftServer.getServer().getCommandManager().executeCommand(MinecraftServer.getServer(), cmd);}});}
-    @ZenMethod public static void               addMultilineShiftTooltip(IItemStack stack, String strs) {                   addMultilineShiftTooltip(stack, getIFormatedTextFromString(strs));}
-    @ZenMethod public static void               addMultilineShiftTooltip(IItemStack stack, String strs, String s) {         addMultilineTooltip(stack,getIFormatedTextFromString(strs), s);}
+    @ZenMethod public static void               addMultilineShiftTooltip(IItemStack stack, String strs) {                   addMultilineShiftTooltip(stack, StringToFormattedString(strs));}
+    @ZenMethod public static void               addMultilineShiftTooltip(IItemStack stack, String strs, String s) {         addMultilineTooltip(stack,StringToFormattedString(strs), s);}
     @ZenMethod public static void               addMultilineShiftTooltip(IItemStack stack, IFormattedText strs) {           addMultilineShiftTooltip(stack, strs, "\n");}
-    @ZenMethod public static void               addMultilineShiftTooltip(IItemStack stack, IFormattedText strs, String s) { for (String str : splitString(MTHandlers.getStringFromFormattedText(strs), s)) IngredientTooltips.addShiftTooltip(stack, MTHandlers.getIFormatedTextFromString(str));}
-    @ZenMethod public static void               addMultilineTooltip(IItemStack stack, String strs, String s) {              addMultilineTooltip(stack,getIFormatedTextFromString(strs),s);}
-    @ZenMethod public static void               addMultilineTooltip(IItemStack stack, String strs) {                        addMultilineTooltip(stack, getIFormatedTextFromString(strs));}
+    @ZenMethod public static void               addMultilineShiftTooltip(IItemStack stack, IFormattedText strs, String s) { for (String str : split(FormattedTextToString(strs), s)) IngredientTooltips.addShiftTooltip(stack, StringToFormattedString(str));}
+    @ZenMethod public static void               addMultilineTooltip(IItemStack stack, String strs, String s) {              addMultilineTooltip(stack, StringToFormattedString(strs),s);}
+    @ZenMethod public static void               addMultilineTooltip(IItemStack stack, String strs) {                        addMultilineTooltip(stack, StringToFormattedString(strs));}
     @ZenMethod public static void               addMultilineTooltip(IItemStack stack, IFormattedText strs) {                addMultilineTooltip(stack, strs, "\n");}
-    @ZenMethod public static void               addMultilineTooltip(IItemStack stack, IFormattedText strs, String s) {      for (String str : splitString(MTHandlers.getStringFromFormattedText(strs), s)) IngredientTooltips.addTooltip(stack, MTHandlers.getIFormatedTextFromString(str));}
+    @ZenMethod public static void               addMultilineTooltip(IItemStack stack, IFormattedText strs, String s) {      for (String str : split(FormattedTextToString(strs), s)) IngredientTooltips.addTooltip(stack, StringToFormattedString(str));}
 
 
 
@@ -120,7 +120,7 @@ public class MTHandlers {
         if (items.length == 2)
             return new MCItemStack(new ItemStack(GameRegistry.findItem(items[0], items[1])));
 
-        return new MCItemStack(new ItemStack(GameRegistry.findItem(items[0], items[1]), Integer.parseInt(items[2])));
+        return new MCItemStack(new ItemStack(GameRegistry.findItem(items[0], items[1]), 1, Integer.parseInt(items[2])));
     }
 
     @ZenMethod public static void setBlockDrops(@Nullable IItemStack harvester, IItemStack block, IItemStack drops[], float quantiDrop[], IItemStack falseDrops[]) {
@@ -148,9 +148,17 @@ public class MTHandlers {
         return true;
     }
 
-    @ZenMethod public static String[] splitString(String original, String split) {
+    @ZenMethod public static IFormattedText[] split(IFormattedText str, String separator){
+        String[] tmpStr = split(FormattedTextToString(str),separator);
+        IFormattedText[] toExit = new IFormattedText[tmpStr.length];
+        for(int i = 0; i < toExit.length; i++)
+            toExit[i] = StringToFormattedString(tmpStr[i]);
+        return toExit;
+    }
+
+    @ZenMethod public static String[] split(String original, String split) {
         if (split.length() == 1)
-            return splitString(original, split.charAt(0));
+            return split(original, split.charAt(0));
         return original.split(split);
     }
 
@@ -164,8 +172,8 @@ public class MTHandlers {
     @ZenMethod public static IFormattedText concat(IFormattedText... strs) {
         String strings[] = new String[strs.length];
         for (int i = 0; i < strs.length; i++)
-            strings[i] = getStringFromFormattedText(strs[i]);
-        return getIFormatedTextFromString(concat(strings));
+            strings[i] = FormattedTextToString(strs[i]);
+        return StringToFormattedString(concat(strings));
     }
 
     @ZenMethod public static String concat(String... strs) {StringBuilder sb = new StringBuilder();
@@ -180,7 +188,7 @@ public class MTHandlers {
                 return false;
         return true;
     }
-    public static String[] splitString(String original, char split) {
+    public static String[] split(String original, char split) {
         return NBTHandlers.splitToByte(original, (byte) split);}
 
 }

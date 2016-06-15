@@ -1,4 +1,8 @@
 import mods.MTUtils.Utils;
 
 Utils.executeCommand("/say " + Utils.getItemStackID(<minecraft:log>));
-Utils.executeCommand("/say " + Utils.isNull(null));
+
+recipes.addShapeless(<minecraft:stone>, [<minecraft:stone>, <minecraft:cobblestone>], function(output, inputs, crafting) {
+  Utils.executeCommand("/say Your craft stone!  ");
+  return output;
+});
