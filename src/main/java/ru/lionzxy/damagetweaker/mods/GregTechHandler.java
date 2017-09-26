@@ -29,40 +29,57 @@ public class GregTechHandler {
 
 	@ZenMethod
 	public static void addFluidInput(ILiquidStack pGTusedFluid, ILiquidStack pOtherFluid) {
-		FluidStack gtFluid = MTUtilsMod.toFluid(pGTusedFluid);
-		FluidStack otherFluid = MTUtilsMod.toFluid(pOtherFluid);
+		addFluidInput(new ILiquidStack[] { pGTusedFluid }, new ILiquidStack[] { pOtherFluid });
+	}
 
-		if (gtFluid == null) {
-			MineTweakerAPI.logError(
-					"[MTUtilsGT] GT fluid not found " + pGTusedFluid != null ? pGTusedFluid.getDisplayName() : "null");
-		} else if (otherFluid == null) {
-			MineTweakerAPI.logError(
-					"[MTUtilsGT] Other fluid not found " + pOtherFluid != null ? pOtherFluid.getDisplayName() : "null");
+	@ZenMethod
+	public static void addFluidInput(ILiquidStack[] pGTusedFluid, ILiquidStack[] pOtherFluid) {
+		FluidStack[] gtFluid = MTUtilsMod.toFluids(pGTusedFluid);
+		FluidStack[] otherFluid = MTUtilsMod.toFluids(pOtherFluid);
+
+		if (pGTusedFluid == null || pOtherFluid == null || pGTusedFluid.length != pOtherFluid.length) {
+			MineTweakerAPI.logError("[MTUtilsGT] GT fluid arrays cannot be null and must the same size!");
 		} else {
+			Map<FluidStack, FluidStack> fluidMap = new HashMap<FluidStack, FluidStack>();
+			for (int i = 0; i < pGTusedFluid.length; i++) {
+				if (gtFluid[i] == null) {
+					MineTweakerAPI
+							.logError("[MTUtilsGT] GT fluid not found for name: " + pGTusedFluid[i].getDisplayName());
+				} else if (otherFluid[i] == null) {
+					MineTweakerAPI
+							.logError("[MTUtilsGT] other fluid not found for name: " + pOtherFluid[i].getDisplayName());
+				} else {
+					fluidMap.put(gtFluid[i], otherFluid[i]);
+				}
+			}
+			
 			for (Entry<String, RecipeMap> entry : Recipe.RecipeMap.RECIPE_MAPS.entrySet()) {
 				RecipeMap map = entry.getValue();
 				for (Recipe recipe : map.getNEIAllRecipes()) {
 					if (recipe.mFluidInputs != null) {
 						List<FluidStack> fluidInputs = Arrays.asList(recipe.mFluidInputs);
 						List<FluidStack> newFluidInputs = new LinkedList<FluidStack>();
-						boolean found = false;
+						int mappedFluids = 0;
 						for (FluidStack fluid : fluidInputs) {
-							FluidStack newFluidInput;
-							if (fluid.isFluidEqual(gtFluid)) {
-								newFluidInput = new FluidStack(otherFluid.getFluid(), fluid.amount);
-								found = true;
+							FluidStack newFluidInput = getMappedFluid(fluidMap, fluid);
+							if (newFluidInput != null) {
+								mappedFluids ++;
 							} else {
 								newFluidInput = new FluidStack(fluid.getFluid(), fluid.amount);
 							}
 							newFluidInputs.add(newFluidInput);
 						}
 
-						if (found) {
+						if (mappedFluids > 0) {
 							Recipe newRecipe = new Recipe(true, false, recipe.mInputs, recipe.mOutputs,
 									recipe.mSpecialItems, recipe.mChances, newFluidInputs.toArray(new FluidStack[] {}),
 									recipe.mFluidOutputs, recipe.mDuration, recipe.mEUt, recipe.mSpecialValue);
 							sRecipesCache.addRecipe(entry.getKey(), newRecipe);
 							entry.getValue().addRecipe(newRecipe, false, recipe.mFakeRecipe, recipe.mHidden);
+
+							String message = "[MTUtilsGT] Recipe with replaced "+ (mappedFluids == 1 ? "fluid" : "fluids") + " for variable " + entry.getKey() + " add!";
+							System.out.println(message);
+							MineTweakerAPI.logInfo(message);
 						}
 					}
 				}
@@ -70,12 +87,21 @@ public class GregTechHandler {
 		}
 	}
 
+	private static FluidStack getMappedFluid(Map<FluidStack, FluidStack> fluidMap, FluidStack gtFluidToMap) {
+		FluidStack newFluidInput = null;
+		for(Entry<FluidStack,FluidStack> entry: fluidMap.entrySet()){
+			if (gtFluidToMap.isFluidEqual(entry.getKey())) {
+				newFluidInput = new FluidStack(entry.getValue(), entry.getKey().amount);
+				break;
+			}
+		}
+		return newFluidInput;
+	}
+
 	@ZenMethod
 	public static void addCustomRecipe(String fieldName, boolean aOptimize, long aEUt, long aDuration, long[] aChances,
 			IItemStack[] aInputs, ILiquidStack[] aFluidInputs, ILiquidStack[] aFluidOutputs, IItemStack... aOutputs) {
 		try {
-			sRecipesCache.removeAddedRecipes();
-
 			Recipe.RecipeMap recipeMap = Recipe.RecipeMap.RECIPE_MAPS.get(fieldName);
 
 			ItemStack[] inputs = MTUtilsMod.toStacks(aInputs);
@@ -152,6 +178,11 @@ public class GregTechHandler {
 
 		}
 
+	}
+
+	@ZenMethod
+	public static void removeAddedRecipes() {
+		sRecipesCache.removeAddedRecipes();
 	}
 
 	@ZenMethod
