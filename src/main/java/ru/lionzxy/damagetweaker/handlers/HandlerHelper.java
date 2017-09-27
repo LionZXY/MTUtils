@@ -21,7 +21,7 @@ public class HandlerHelper {
         MineTweakerAPI.registerClass(CustomGlobalData.class);
         MineTweakerAPI.registerClass(CustomWorldData.class);
         MineTweakerAPI.registerClass(MTHandlers.class);
-        if (Loader.isModLoaded(CS.ModIDs.API))
+        if (Loader.isModLoaded(CS.ModIDs.GAPI))
             MineTweakerAPI.registerClass(GregTechHandler.class);
         if (FMLCommonHandler.instance().getEffectiveSide().isClient()
                 && MTUtilsMod.configuration.get("general", "ThankMessage", true).getBoolean())

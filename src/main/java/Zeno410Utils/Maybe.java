@@ -99,7 +99,7 @@ public abstract class Maybe<T> implements Iterable<T> {
 
         @Override
         public <U> Maybe<U> to(Function<? super T, ? extends U> mapping) {
-            return definitely(mapping.apply(theValue));
+            return definitely((U)mapping.apply(theValue));
         }
 
         @Override
