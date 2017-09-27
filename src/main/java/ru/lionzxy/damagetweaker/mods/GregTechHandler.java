@@ -29,58 +29,63 @@ public class GregTechHandler {
 
 	@ZenMethod
 	public static void addFluidInput(ILiquidStack pGTusedFluid, ILiquidStack pOtherFluid) {
-		addFluidInput(new ILiquidStack[] { pGTusedFluid }, new ILiquidStack[] { pOtherFluid });
+		ILiquidStack[][] mappedLiquids = new ILiquidStack[1][];
+		mappedLiquids[0] = new ILiquidStack[] { pGTusedFluid, pOtherFluid };
+		addFluidInput(mappedLiquids);
 	}
 
 	@ZenMethod
-	public static void addFluidInput(ILiquidStack[] pGTusedFluid, ILiquidStack[] pOtherFluid) {
-		FluidStack[] gtFluid = MTUtilsMod.toFluids(pGTusedFluid);
-		FluidStack[] otherFluid = MTUtilsMod.toFluids(pOtherFluid);
+	public static void addFluidInput(ILiquidStack[][] pMappedFluids) {
+		Map<FluidStack, FluidStack> fluidMap = new HashMap<FluidStack, FluidStack>();
+		for (int i = 0; i < pMappedFluids.length; i++) {
+			if (pMappedFluids[i].length != 2 || pMappedFluids[i][0] == null || pMappedFluids[i][1] == null) {
+				MineTweakerAPI.logError("[MTUtilsGT] Fluid map must contain two fluids, null values are not allowed!");
+				MineTweakerAPI.logError("[MTUtilsGT] Please check combination: " + i);
+			} else {
+				FluidStack gtFluid = MTUtilsMod.toFluid(pMappedFluids[i][0]);
+				FluidStack otherFluid = MTUtilsMod.toFluid(pMappedFluids[i][1]);
 
-		if (pGTusedFluid == null || pOtherFluid == null || pGTusedFluid.length != pOtherFluid.length) {
-			MineTweakerAPI.logError("[MTUtilsGT] GT fluid arrays cannot be null and must the same size!");
-		} else {
-			Map<FluidStack, FluidStack> fluidMap = new HashMap<FluidStack, FluidStack>();
-			for (int i = 0; i < pGTusedFluid.length; i++) {
-				if (gtFluid[i] == null) {
-					MineTweakerAPI
-							.logError("[MTUtilsGT] GT fluid not found for name: " + pGTusedFluid[i].getDisplayName());
-				} else if (otherFluid[i] == null) {
-					MineTweakerAPI
-							.logError("[MTUtilsGT] other fluid not found for name: " + pOtherFluid[i].getDisplayName());
+				if (gtFluid == null) {
+					MineTweakerAPI.logError(
+							"[MTUtilsGT] GT fluid not found for name: " + pMappedFluids[i][0].getDisplayName());
+				} else if (otherFluid == null) {
+					MineTweakerAPI.logError(
+							"[MTUtilsGT] other fluid not found for name: " + pMappedFluids[i][1].getDisplayName());
 				} else {
-					fluidMap.put(gtFluid[i], otherFluid[i]);
+					fluidMap.put(gtFluid, otherFluid);
 				}
 			}
-			
-			for (Entry<String, RecipeMap> entry : Recipe.RecipeMap.RECIPE_MAPS.entrySet()) {
-				RecipeMap map = entry.getValue();
-				for (Recipe recipe : map.getNEIAllRecipes()) {
-					if (recipe.mFluidInputs != null) {
-						List<FluidStack> fluidInputs = Arrays.asList(recipe.mFluidInputs);
-						List<FluidStack> newFluidInputs = new LinkedList<FluidStack>();
-						int mappedFluids = 0;
-						for (FluidStack fluid : fluidInputs) {
-							FluidStack newFluidInput = getMappedFluid(fluidMap, fluid);
-							if (newFluidInput != null) {
-								mappedFluids ++;
-							} else {
-								newFluidInput = new FluidStack(fluid.getFluid(), fluid.amount);
-							}
-							newFluidInputs.add(newFluidInput);
-						}
+		}
 
-						if (mappedFluids > 0) {
-							Recipe newRecipe = new Recipe(true, false, recipe.mInputs, recipe.mOutputs,
-									recipe.mSpecialItems, recipe.mChances, newFluidInputs.toArray(new FluidStack[] {}),
-									recipe.mFluidOutputs, recipe.mDuration, recipe.mEUt, recipe.mSpecialValue);
-							sRecipesCache.addRecipe(entry.getKey(), newRecipe);
-							entry.getValue().addRecipe(newRecipe, false, recipe.mFakeRecipe, recipe.mHidden);
-
-							String message = "[MTUtilsGT] Recipe with replaced "+ (mappedFluids == 1 ? "fluid" : "fluids") + " for variable " + entry.getKey() + " add!";
-							System.out.println(message);
-							MineTweakerAPI.logInfo(message);
+		for (Entry<String, RecipeMap> entry : Recipe.RecipeMap.RECIPE_MAPS.entrySet()) {
+			RecipeMap map = entry.getValue();
+			for (Recipe recipe : map.getNEIAllRecipes()) {
+				if (recipe.mFluidInputs != null) {
+					List<FluidStack> fluidInputs = Arrays.asList(recipe.mFluidInputs);
+					List<FluidStack> newFluidInputs = new LinkedList<FluidStack>();
+					int mappedFluids = 0;
+					for (FluidStack fluid : fluidInputs) {
+						FluidStack newFluidInput = getMappedFluid(fluidMap, fluid);
+						if (newFluidInput != null) {
+							newFluidInput = new FluidStack(newFluidInput.getFluid(), fluid.amount);
+							mappedFluids++;
+						} else {
+							newFluidInput = new FluidStack(fluid.getFluid(), fluid.amount);
 						}
+						newFluidInputs.add(newFluidInput);
+					}
+
+					if (mappedFluids > 0) {
+						Recipe newRecipe = new Recipe(true, false, recipe.mInputs, recipe.mOutputs,
+								recipe.mSpecialItems, recipe.mChances, newFluidInputs.toArray(new FluidStack[] {}),
+								recipe.mFluidOutputs, recipe.mDuration, recipe.mEUt, recipe.mSpecialValue);
+						sRecipesCache.addRecipe(entry.getKey(), newRecipe);
+						entry.getValue().addRecipe(newRecipe, true, recipe.mFakeRecipe, recipe.mHidden);
+
+						String message = "[MTUtilsGT] Recipe with replaced " + (mappedFluids == 1 ? "fluid" : "fluids")
+								+ " for variable " + entry.getKey() + " add!";
+						System.out.println(message);
+						MineTweakerAPI.logInfo(message);
 					}
 				}
 			}
@@ -89,9 +94,9 @@ public class GregTechHandler {
 
 	private static FluidStack getMappedFluid(Map<FluidStack, FluidStack> fluidMap, FluidStack gtFluidToMap) {
 		FluidStack newFluidInput = null;
-		for(Entry<FluidStack,FluidStack> entry: fluidMap.entrySet()){
+		for (Entry<FluidStack, FluidStack> entry : fluidMap.entrySet()) {
 			if (gtFluidToMap.isFluidEqual(entry.getKey())) {
-				newFluidInput = new FluidStack(entry.getValue(), entry.getKey().amount);
+				newFluidInput = new FluidStack(entry.getValue(), gtFluidToMap.amount);
 				break;
 			}
 		}
