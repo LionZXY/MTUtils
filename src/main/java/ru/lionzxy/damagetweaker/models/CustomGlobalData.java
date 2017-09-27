@@ -1,11 +1,11 @@
 package ru.lionzxy.damagetweaker.models;
 
+import java.io.File;
+
+import cpw.mods.fml.common.Loader;
 import minetweaker.api.data.IData;
-import net.minecraft.client.Minecraft;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
-
-import java.io.File;
 
 /**
  * Created by lionzxy on 6/8/16.
@@ -23,7 +23,7 @@ public class CustomGlobalData extends CustomData {
 
     @Override
     File getFile() {
-        return new File(Minecraft.getMinecraft().mcDataDir, "MTUtilsData.nbt");
+        return new File(Loader.instance().getConfigDir() + File.separator + "..", "MTUtilsData.nbt");
     }
 
     @ZenMethod

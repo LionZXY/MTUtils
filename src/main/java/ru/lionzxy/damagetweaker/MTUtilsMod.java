@@ -16,7 +16,6 @@ import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.liquid.ILiquidStack;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
@@ -45,7 +44,7 @@ public class MTUtilsMod {
 
 		try {
 			File globalTemplare = new File(Loader.instance().getConfigDir() + "/MTUtils/data/", "newglobal.nbt");
-			File globalNow = new File(Minecraft.getMinecraft().mcDataDir, "MTUtilsData.nbt");
+			File globalNow = new File(Loader.instance().getConfigDir() + File.separator + "..", "MTUtilsData.nbt");
 			if (!globalNow.exists())
 				if (globalTemplare.exists())
 					Files.copy(globalTemplare, globalNow);
