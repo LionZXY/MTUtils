@@ -32,7 +32,7 @@ import ru.lionzxy.damagetweaker.mods.ubc.UBC;
  * Created by nikit on 10.09.2015.
  */
 
-@Mod(name = "MTUtils", modid = "MTUtils", version = "1.5", dependencies = "after:UndergroundBiomes;" + "after:"
+@Mod(name = "MTUtils", modid = "MTUtils", version = "1.6", dependencies = "after:UndergroundBiomes;" + "after:"
 		+ CS.ModIDs.GAPI + ";after:TabulaRasa")
 public class MTUtilsMod {
 	public static Configuration configuration;
