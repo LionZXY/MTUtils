@@ -1,5 +1,6 @@
 package ru.lionzxy.damagetweaker.mods;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,7 +17,7 @@ import minetweaker.api.liquid.ILiquidStack;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import ru.lionzxy.damagetweaker.MTUtilsMod;
-import scala.actors.threadpool.Arrays;
+import ru.lionzxy.damagetweaker.utils.UndoableAction;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -25,8 +26,6 @@ import stanhebben.zenscript.annotations.ZenMethod;
  */
 @ZenClass("mods.MTUtilsGT")
 public class GregTechHandler {
-	private static GTRecipesCache sRecipesCache = new GTRecipesCache();
-
 	@ZenMethod
 	public static void addFluidInput(ILiquidStack pGTusedFluid, ILiquidStack pOtherFluid) {
 		ILiquidStack[][] mappedLiquids = new ILiquidStack[1][];
@@ -57,6 +56,9 @@ public class GregTechHandler {
 			}
 		}
 
+		final List<Runnable> applyRunnables = new LinkedList<Runnable>();
+		final List<Runnable> undoRunnables = new LinkedList<Runnable>();
+
 		for (Entry<String, RecipeMap> entry : Recipe.RecipeMap.RECIPE_MAPS.entrySet()) {
 			RecipeMap map = entry.getValue();
 			for (Recipe recipe : map.getNEIAllRecipes()) {
@@ -75,39 +77,67 @@ public class GregTechHandler {
 						newFluidInputs.add(newFluidInput);
 					}
 
+					final boolean fakeRecipe = recipe.mFakeRecipe;
+					final boolean hidden = recipe.mHidden;
+					final String fluidText = mappedFluids == 1 ? "fluid" : String.valueOf(mappedFluids) + " fluids";
+					final String key = entry.getKey();
+
 					if (mappedFluids > 0) {
-						Recipe newRecipe = new Recipe(true, false, recipe.mInputs, recipe.mOutputs,
+						final Recipe newRecipe = new Recipe(true, false, recipe.mInputs, recipe.mOutputs,
 								recipe.mSpecialItems, recipe.mChances, newFluidInputs.toArray(new FluidStack[] {}),
 								recipe.mFluidOutputs, recipe.mDuration, recipe.mEUt, recipe.mSpecialValue);
-						sRecipesCache.addRecipe(entry.getKey(), newRecipe);
-						entry.getValue().addRecipe(newRecipe, true, recipe.mFakeRecipe, recipe.mHidden);
+						final RecipeMap recipes = entry.getValue();
 
-						String message = "[MTUtilsGT] Recipe with replaced " + (mappedFluids == 1 ? "fluid" : "fluids")
-								+ " for variable " + entry.getKey() + " add!";
-						System.out.println(message);
-						MineTweakerAPI.logInfo(message);
+						applyRunnables.add(new Runnable() {
+							@Override
+							public void run() {
+								recipes.addRecipe(newRecipe, true, fakeRecipe, hidden);
+
+								String message = "[MTUtilsGT] Recipe with replaced " + fluidText + " for variable "
+										+ key + " add!";
+								System.out.println(message);
+								MineTweakerAPI.logInfo(message);
+							}
+						});
+
+						undoRunnables.add(new Runnable() {
+							@Override
+							public void run() {
+								recipes.getNEIAllRecipes().remove(newRecipe);
+							}
+						});
 					}
 				}
 			}
 		}
-	}
 
-	private static FluidStack getMappedFluid(Map<FluidStack, FluidStack> fluidMap, FluidStack gtFluidToMap) {
-		FluidStack newFluidInput = null;
-		for (Entry<FluidStack, FluidStack> entry : fluidMap.entrySet()) {
-			if (gtFluidToMap.isFluidEqual(entry.getKey())) {
-				newFluidInput = new FluidStack(entry.getValue(), gtFluidToMap.amount);
-				break;
+		Runnable applyRunnable = new Runnable() {
+			@Override
+			public void run() {
+				for (Runnable runnable : applyRunnables) {
+					runnable.run();
+				}
 			}
-		}
-		return newFluidInput;
+		};
+
+		Runnable undoRunnable = new Runnable() {
+			@Override
+			public void run() {
+				for (Runnable runnable : undoRunnables) {
+					runnable.run();
+				}
+			}
+		};
+
+		MineTweakerAPI.apply(new UndoableAction("Map fluids", applyRunnable, "Undo mapped fluids", undoRunnable));
 	}
 
 	@ZenMethod
-	public static void addCustomRecipe(String fieldName, boolean aOptimize, long aEUt, long aDuration, long[] aChances,
-			IItemStack[] aInputs, ILiquidStack[] aFluidInputs, ILiquidStack[] aFluidOutputs, IItemStack... aOutputs) {
+	public static void addCustomRecipe(final String fieldName, boolean aOptimize, long aEUt, long aDuration,
+			long[] aChances, IItemStack[] aInputs, ILiquidStack[] aFluidInputs, ILiquidStack[] aFluidOutputs,
+			IItemStack... aOutputs) {
 		try {
-			Recipe.RecipeMap recipeMap = Recipe.RecipeMap.RECIPE_MAPS.get(fieldName);
+			final Recipe.RecipeMap recipeMap = Recipe.RecipeMap.RECIPE_MAPS.get(fieldName);
 
 			ItemStack[] inputs = MTUtilsMod.toStacks(aInputs);
 			FluidStack[] fluidInputs = MTUtilsMod.toFluids(aFluidInputs);
@@ -115,14 +145,28 @@ public class GregTechHandler {
 			ItemStack[] outputs = MTUtilsMod.toStacks(aOutputs);
 			FluidStack[] fluidOutputs = MTUtilsMod.toFluids(aFluidOutputs);
 
-			Recipe recipe = new Recipe(aOptimize, true, true, inputs, outputs, CS.NI, aChances, fluidInputs,
+			final Recipe recipe = new Recipe(aOptimize, true, true, inputs, outputs, CS.NI, aChances, fluidInputs,
 					fluidOutputs, aDuration, aEUt, 0L);
 
-			sRecipesCache.addRecipe(fieldName, recipe);
+			Runnable applyRunnable = new Runnable() {
+				@Override
+				public void run() {
+					recipeMap.addRecipe(recipe, false, false, false);
 
-			recipeMap.addRecipe(recipe, false, false, false);
-			System.out.println("[MTUtilsGT] Recipe for variable " + fieldName + " add!");
-			MineTweakerAPI.logInfo("[MTUtilsGT] Recipe for variable " + fieldName + " add!");
+					System.out.println("[MTUtilsGT] Recipe for variable " + fieldName + " add!");
+					MineTweakerAPI.logInfo("[MTUtilsGT] Recipe for variable " + fieldName + " add!");
+				}
+			};
+
+			Runnable undoRunnable = new Runnable() {
+				@Override
+				public void run() {
+					recipeMap.getNEIAllRecipes().remove(recipe);
+				}
+			};
+
+			MineTweakerAPI.apply(new UndoableAction("Add recipe to " + fieldName, applyRunnable,
+					"Undo added recipe from " + fieldName, undoRunnable));
 		} catch (Exception e) {
 			MineTweakerAPI.logError(
 					"[MTUtilsGT] Not found variable " + fieldName + " in gregapi.recipes.Recipe.RecipeMap\n", e);
@@ -146,11 +190,26 @@ public class GregTechHandler {
 	@ZenMethod
 	public static void removeAllRecipes(String fieldName, IItemStack... output) {
 		try {
-			Recipe.RecipeMap recipeMap = Recipe.RecipeMap.RECIPE_MAPS.get(fieldName);
+			final Recipe.RecipeMap recipeMap = Recipe.RecipeMap.RECIPE_MAPS.get(fieldName);
 
-			List<Recipe> recipes = recipeMap.getNEIRecipes(MTUtilsMod.toStacks(output));
-			if (recipes != null) {
-				recipeMap.mRecipeList.removeAll(recipes);
+			final List<Recipe> recipes = recipeMap.getNEIRecipes(MTUtilsMod.toStacks(output));
+			if (recipes != null && !recipes.isEmpty()) {
+				Runnable applyRunnable = new Runnable() {
+					@Override
+					public void run() {
+						recipeMap.mRecipeList.removeAll(recipes);
+					}
+				};
+
+				Runnable undoRunnable = new Runnable() {
+					@Override
+					public void run() {
+						recipeMap.mRecipeList.addAll(recipes);
+					}
+				};
+
+				MineTweakerAPI.apply(new UndoableAction("Remove all recipes from " + fieldName, applyRunnable,
+						"Add removed recipes to " + fieldName, undoRunnable));
 			}
 		} catch (Exception e) {
 			MineTweakerAPI.logError(
@@ -164,7 +223,8 @@ public class GregTechHandler {
 	public static void removeRecipe(String fieldName, IItemStack[] aInputs, ILiquidStack[] aFluidInputs,
 			IItemStack... output) {
 		try {
-			Recipe.RecipeMap recipeMap = Recipe.RecipeMap.RECIPE_MAPS.get(fieldName);
+			final Recipe.RecipeMap recipeMap = Recipe.RecipeMap.RECIPE_MAPS.get(fieldName);
+			final List<Recipe> toRemove = new LinkedList<Recipe>();
 
 			List<Recipe> recipes = recipeMap.getNEIRecipes(MTUtilsMod.toStacks(output));
 			if (recipes != null) {
@@ -173,9 +233,32 @@ public class GregTechHandler {
 					FluidStack[] fluidInputs = MTUtilsMod.toFluids(aFluidInputs);
 
 					if (recipe.isRecipeInputEqual(false, true, fluidInputs, inputs)) {
-						recipeMap.mRecipeList.remove(recipe);
+						toRemove.add(recipe);
 					}
 				}
+			}
+
+			if (!toRemove.isEmpty()) {
+				Runnable applyRunnable = new Runnable() {
+					@Override
+					public void run() {
+						for (Recipe recipe : toRemove) {
+							recipeMap.getNEIAllRecipes().remove(recipe);
+						}
+					}
+				};
+
+				Runnable undoRunnable = new Runnable() {
+					@Override
+					public void run() {
+						for (Recipe recipe : toRemove) {
+							recipeMap.add(recipe);
+						}
+					}
+				};
+
+				MineTweakerAPI.apply(new UndoableAction("Remove recipes from " + fieldName, applyRunnable,
+						"Add removed recipes to " + fieldName, undoRunnable));
 			}
 		} catch (Exception e) {
 			MineTweakerAPI.logError(
@@ -186,34 +269,18 @@ public class GregTechHandler {
 	}
 
 	@ZenMethod
-	public static void removeAddedRecipes() {
-		sRecipesCache.removeAddedRecipes();
-	}
-
-	@ZenMethod
 	public static void test(IFormattedText recipeName) {
 	}
 
-	private static final class GTRecipesCache {
-		private static final Map<String, List<Recipe>> mAddedRecipes = new HashMap<String, List<Recipe>>();
-
-		private void addRecipe(String pKey, Recipe pRecipe) {
-			List<Recipe> recipes = mAddedRecipes.get(pKey);
-			if (recipes == null) {
-				recipes = new LinkedList<Recipe>();
-				sRecipesCache.mAddedRecipes.put(pKey, recipes);
+	private static FluidStack getMappedFluid(Map<FluidStack, FluidStack> fluidMap, FluidStack gtFluidToMap) {
+		FluidStack newFluidInput = null;
+		for (Entry<FluidStack, FluidStack> entry : fluidMap.entrySet()) {
+			if (gtFluidToMap.isFluidEqual(entry.getKey())) {
+				newFluidInput = new FluidStack(entry.getValue(), gtFluidToMap.amount);
+				break;
 			}
-			recipes.add(pRecipe);
 		}
-
-		private void removeAddedRecipes() {
-			for (Entry<String, List<Recipe>> entry : mAddedRecipes.entrySet()) {
-				Recipe.RecipeMap recipeMap = Recipe.RecipeMap.RECIPE_MAPS.get(entry.getKey());
-				if (recipeMap != null) {
-					recipeMap.mRecipeList.removeAll(entry.getValue());
-				}
-			}
-			mAddedRecipes.clear();
-		}
+		return newFluidInput;
 	}
+
 }

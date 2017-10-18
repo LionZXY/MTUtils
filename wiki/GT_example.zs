@@ -1,12 +1,8 @@
 import mods.MTUtilsGT;
 
 /*
- *  Remove all recipes, added with MTUtilsGT before. 
- *  It is necessary to get a correct function of minetweakers's reload.
- *  Use it only in one script at first position before adding new recipes.
- *  Otherwise it will remove to many recipes.
+ *  All added or removed recipes will reset after start of reload of MineTweaker.
  */
-MTUtilsGT.removeAddedRecipes();
 
 //
 //  Get a key for a GT machine

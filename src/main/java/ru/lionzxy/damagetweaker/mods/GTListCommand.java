@@ -1,16 +1,18 @@
 package ru.lionzxy.damagetweaker.mods;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import gregapi.recipes.Recipe;
-import gregapi.util.UT;
+import gregapi.recipes.Recipe.RecipeMap;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 
 public class GTListCommand implements ICommand {
 
@@ -112,6 +114,40 @@ public class GTListCommand implements ICommand {
 				} else {
 					pSender.addChatMessage(new ChatComponentText(getCommandUsage(pSender)));
 				}
+			} else if ("gtfluids".equalsIgnoreCase(arg1[0])) {
+				MinecraftServer server = MinecraftServer.getServer();
+				ChatComponentText message = new ChatComponentText("");
+				server.addChatMessage(message);
+				pSender.addChatMessage(message);
+				message = new ChatComponentText("Input fluids of GT-recipes");
+				server.addChatMessage(message);
+				pSender.addChatMessage(message);
+
+				Set<String> fluids = new HashSet<String>();
+				for (RecipeMap recipes : Recipe.RecipeMap.RECIPE_MAPS.values()) {
+					for (Recipe recipe : recipes.getNEIAllRecipes()) {
+						if (recipe.mFluidInputs != null) {
+							for (FluidStack fluid : recipe.mFluidInputs) {
+								fluids.add(fluid.getFluid().getName());
+							}
+						}
+					}
+				}
+				List<String>sortedFluids = new LinkedList<String>();
+				sortedFluids.addAll(fluids);
+				Collections.sort(sortedFluids);
+
+				List<ChatComponentText> messages = new LinkedList<ChatComponentText>();
+				for (String fluid : sortedFluids) {
+					if (!fluid.isEmpty()) {
+						message = new ChatComponentText(fluid);
+						server.addChatMessage(message);
+						messages.add(message);
+					}
+				}
+
+				sendMessages(pSender, messages, arg1.length > 1 ? arg1[1] : null, null);
+
 			}
 		} else {
 			pSender.addChatMessage(new ChatComponentText(getCommandUsage(pSender)));
