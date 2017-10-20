@@ -13,14 +13,31 @@
       <entry name="!?*.java" />
       <entry name="!?*.groovy" />
     </wildcardResourcePatterns>
+    <bytecodeTargetLevel>
+      <module name="MTUtils_api" target="1.6" />
+      <module name="MTUtils_main" target="1.6" />
+      <module name="MTUtils_test" target="1.6" />
+    </bytecodeTargetLevel>
   </component>
-  <component name="CopyrightManager" default="">
-    <module2copyright />
-  </component>
+  <component name="CopyrightManager" default="" />
   <component name="DependencyValidationManager">
     <option name="SKIP_IMPORT_STATEMENTS" value="false" />
   </component>
   <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false" />
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleHome" value="$USER_HOME$/.sdkman/candidates/gradle/current" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
   <component name="GradleUISettings">
     <setting name="root" />
   </component>
@@ -54,6 +71,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MTUtils.iml" filepath="$PROJECT_DIR$/MTUtils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MTUtils_api.iml" filepath="$PROJECT_DIR$/MTUtils_api.iml" group="MTUtils" />
+      <module fileurl="file://$PROJECT_DIR$/MTUtils_main.iml" filepath="$PROJECT_DIR$/MTUtils_main.iml" group="MTUtils" />
+      <module fileurl="file://$PROJECT_DIR$/MTUtils_test.iml" filepath="$PROJECT_DIR$/MTUtils_test.iml" group="MTUtils" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" project-jdk-name="1.8" project-jdk-type="JavaSDK">
@@ -64,6 +84,15 @@
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+  </component>
+  <component name="libraryTable">
+    <library name="Gradle: :forgeBin:1.7.10-10.13.4.1614-1.7.10">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/Could not find :forgeBin:1.7.10-10.13.4.1614-1.7.10.&#10;Searched in the following locations:&#10;    http:/files.minecraftforge.net/maven/forgeBin/1.7.10-10.13.4.1614-1.7.10/forgeBin-1.7.10-10.13.4.1614-1.7.10.pom&#10;    http:/files.minecraftforge.net/maven/forgeBin/1.7.10-10.13.4.1614-1.7.10/forgeBin-1.7.10-10.13.4.1614-1.7.10.jar&#10;    http:/repo1.maven.org/maven2/forgeBin/1.7.10-10.13.4.1614-1.7.10/forgeBin-1.7.10-10.13.4.1614-1.7.10.pom&#10;    http:/repo1.maven.org/maven2/forgeBin/1.7.10-10.13.4.1614-1.7.10/forgeBin-1.7.10-10.13.4.1614-1.7.10.jar&#10;    https:/libraries.minecraft.net/forgeBin/1.7.10-10.13.4.1614-1.7.10/forgeBin-1.7.10-10.13.4.1614-1.7.10.pom&#10;    https:/libraries.minecraft.net/forgeBin/1.7.10-10.13.4.1614-1.7.10/forgeBin-1.7.10-10.13.4.1614-1.7.10.jar&#10;    file:/home/lionzxy/.gradle/caches/minecraft/net/minecraftforge/forge/1.7.10-10.13.4.1614-1.7.10/forgeBin-1.7.10-10.13.4.1614-1.7.10.jar&#10;    file:/home/lionzxy/.gradle/caches/minecraft/net/minecraftforge/forge/1.7.10-10.13.4.1614-1.7.10/forgeBin.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
   </component>
   <component name="masterDetails">
     <states>
