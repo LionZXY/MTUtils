@@ -6,6 +6,7 @@ import com.google.common.io.Files;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
@@ -13,10 +14,12 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import exterminatorJeff.undergroundBiomes.api.NamedBlock;
 import gregapi.data.CS;
 import minetweaker.MineTweakerAPI;
+import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.liquid.ILiquidStack;
+import minetweaker.runtime.providers.ScriptProviderDirectory;
+import minetweaker.util.IEventHandler;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
@@ -26,14 +29,15 @@ import ru.lionzxy.damagetweaker.handlers.HandlerHelper;
 import ru.lionzxy.damagetweaker.handlers.TicksHandler;
 import ru.lionzxy.damagetweaker.models.CustomGlobalData;
 import ru.lionzxy.damagetweaker.mods.GTListCommand;
+import ru.lionzxy.damagetweaker.mods.GregTechHandler;
 import ru.lionzxy.damagetweaker.mods.ubc.UBC;
 
 /**
  * Created by nikit on 10.09.2015.
  */
 
-@Mod(name = "MTUtils", modid = "MTUtils", version = "1.6", dependencies = "after:UndergroundBiomes;" + "after:"
-		+ CS.ModIDs.GAPI + ";after:TabulaRasa")
+@Mod(name = "MTUtils", modid = "MTUtils", version = "1.6", dependencies = "required-after:MineTweaker3;after:UndergroundBiomes;"
+		+ "after:" + CS.ModIDs.GAPI + ";after:TabulaRasa")
 public class MTUtilsMod {
 	public static Configuration configuration;
 
@@ -45,7 +49,7 @@ public class MTUtilsMod {
 
 		try {
 			File globalTemplare = new File(Loader.instance().getConfigDir() + "/MTUtils/data/", "newglobal.nbt");
-			File globalNow = new File(Minecraft.getMinecraft().mcDataDir, "MTUtilsData.nbt");
+			File globalNow = new File(Loader.instance().getConfigDir() + File.separator + "..", "MTUtilsData.nbt");
 			if (!globalNow.exists())
 				if (globalTemplare.exists())
 					Files.copy(globalTemplare, globalNow);
@@ -60,8 +64,12 @@ public class MTUtilsMod {
 	}
 
 	@Mod.EventHandler
-	public void postInit(FMLPostInitializationEvent event) {
+	public void init(FMLInitializationEvent event) {
 		HandlerHelper.registerAllHandler();
+	}
+
+	@Mod.EventHandler
+	public void postInit(FMLPostInitializationEvent event) {
 		configuration.save();
 	}
 

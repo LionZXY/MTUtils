@@ -3,7 +3,6 @@ package ru.lionzxy.damagetweaker.models;
 import com.google.common.io.Files;
 import cpw.mods.fml.common.Loader;
 import minetweaker.api.data.IData;
-import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.storage.ISaveFormat;
 import net.minecraft.world.storage.SaveHandler;
