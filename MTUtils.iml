@@ -14,5 +14,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="gregtech_1.7.10-6.05.50-dev" level="project" />
+    <orderEntry type="library" name="industrialcraft-2-2.2.783-experimental-dev" level="project" />
+    <orderEntry type="library" name="MineTweaker3-Dev-1.7.10-3.0.10" level="project" />
   </component>
 </module>
